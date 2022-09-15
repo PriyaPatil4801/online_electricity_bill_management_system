@@ -7,16 +7,12 @@ import image from '../images/login.gif';
 function Login() {
     let w=200;
     let h=200;
+    let navigate=useNavigate();
     const [consumer, setConsumer] = useState({
     
         email: '',
         password:''
     });
-
-    const navigate = useNavigate();
-      
-
-    
     const onInputChange = e => {
         setConsumer({ ...consumer, [e.target.name]: e.target.value })
     }
@@ -61,10 +57,10 @@ function Login() {
                                 </div>
                                 <div className="container" >
                                     
-                                    <button  type="submit" class="btn btn-outline-secondary my-2 text-center mr-2 " >Login</button><br/>
-                                    {/*<button  type="button" className="btn btn-primary" onClick={() => {navigate("/RegisterConsumer");}}>New Register </button>*/}
-                                    <a href="/RegisterConsumer">Consumer Register</a><br/>
-                                    <a href="/RegisterSubadmin">Subadmin Register</a>
+                                    <button  type="submit" class="btn btn-outline-secondary my-2 text-center mr-2 " className="btn btn-primary">Login</button><br/>
+                                    <button  type="button" className="btn btn-primary" onClick={() => {navigate("/RegisterConsumer");}}>New Register </button>
+                                    {/*<a href="/RegisterConsumer">Consumer Register</a><br/>
+                                    <a href="/RegisterSubadmin">Subadmin Register</a>*/}
                                 </div>
                             </form>
                         </div>

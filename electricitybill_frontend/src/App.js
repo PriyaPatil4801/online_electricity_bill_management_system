@@ -4,7 +4,7 @@ import RegisterComsumer from './views/consumer/RegisterConsumer';
 import Login from './views/user/Login';
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import RegisterSubadmin from './views/subadmin/RegisterSubadmin';
-
+import Home from './views/user/Home';
 
 function App() {
   return (
@@ -12,7 +12,8 @@ function App() {
       <header className="App-header">
       <Router>
         <Routes>
-        <Route path="" element={<Login />} />
+          <Route path="" element={<Home/>} />
+          <Route path="/login" element={<Login />} />
           <Route path="/RegisterConsumer" element={<RegisterComsumer />} />
           <Route path="/RegisterSubadmin" element={<RegisterSubadmin />} />
         </Routes>
@@ -23,5 +24,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;

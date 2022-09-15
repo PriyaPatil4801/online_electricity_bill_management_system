@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 function RegisterComsumer() {
     const [user, setUser] = useState({
@@ -93,7 +94,7 @@ function RegisterComsumer() {
                                 </div>
                                                                  
                                 <div className="container text-center">
-                                    <button type="submit" class="btn btn-outline-secondary my-2 text-center mr-2" className="btn btn-primary">Register</button>
+                                    <button type="submit" class="btn btn-outline-secondary my-2 text-center mr-2" className="btn btn-primary" onClick={() => {navigate("/Login");}}>Register</button>
                                 
                                <button type="clear" class="btn btn-outline-secondary my-2 text-center mr-2" >Clear<a href="/RegisterConsumer.js"></a></button>   
                                 </div>
