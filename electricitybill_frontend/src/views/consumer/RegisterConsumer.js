@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 
 function RegisterComsumer() {
+    let navigate=useNavigate();
     const [user, setUser] = useState({
            
         name: '',
@@ -31,6 +32,8 @@ function RegisterComsumer() {
             (response) => {
                 console.log(response);
                 alert("Added Successfully");
+                navigate("/Login");
+                
             }, (error) => {
                 console.log(error);
                 alert("Failed to add please try again");
@@ -57,6 +60,16 @@ function RegisterComsumer() {
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" name="email"  placeholder="abc@gmail.com" value={email} onChange={(e) => onInputChange(e)} />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password">password</label>
+                                    <input type="text" class="form-control" name="password"  placeholder="Enter password" value={password} onChange={(e) => onInputChange(e)} />
+                                </div>
+
+                                <div class="form-group">
                                     <label for="address">Address</label>
                                     <input type="text" class="form-control" name="address"  placeholder="Enter address" value={address} onChange={(e) => onInputChange(e)} />
                                 </div>
@@ -64,12 +77,7 @@ function RegisterComsumer() {
                                 <div class="form-group">
                                     <label for="city">City</label>
                                     <input type="text" class="form-control" name="city"  placeholder="Enter city" value={city} onChange={(e) => onInputChange(e)} />
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <input type="email" class="form-control" name="email"  placeholder="abc@gmail.com" value={email} onChange={(e) => onInputChange(e)} />
-                                </div>
+                                </div>                             
 
                                 <div class="form-group">
                                     <label for="state">State</label>
@@ -79,24 +87,20 @@ function RegisterComsumer() {
 
                                 <div class="form-group">
                                     <label for="zone_name">Zone name</label>
-                                    <select name="zone"  value={zone_name} onChange={(e) => onInputChange(e)} >
+                                    <select class="form-select" aria-label=".form-select-lg example" value={zone_name} onChange={(e) => onInputChange(e)} >
+                                    <option selected>Open this select menu</option>
                                     <option value="1">Katraj</option>
-                                    <option value="2">Hadapsar</option>
-                                    <option value="3">Kothrud</option>
+                                    <option value="2">Kothrud</option>
+                                    <option value="3">Hadapsar</option>
                                     <option value="4">Nigdi</option>
                                     </select>
                                     
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="password">password</label>
-                                    <input type="text" class="form-control" name="password"  placeholder="Enter password" value={password} onChange={(e) => onInputChange(e)} />
-                                </div>
+                                </div>                            
                                                                  
                                 <div className="container text-center">
-                                    <button type="submit" class="btn btn-outline-secondary my-2 text-center mr-2" className="btn btn-primary" onClick={() => {navigate("/Login");}}>Register</button>
+                                    <button type="submit" class="btn btn-outline-secondary my-2 text-center mr-2" className="btn btn-primary" >Register</button>
                                 
-                               <button type="clear" class="btn btn-outline-secondary my-2 text-center mr-2" >Clear<a href="/RegisterConsumer.js"></a></button>   
+                                    <button type="clear" class="btn btn-outline-secondary my-2 text-center mr-2" onClick={() => {navigate("/RegisterConsumer");}} >Clear</button>   
                                 </div>
                             </form>
                         </div>

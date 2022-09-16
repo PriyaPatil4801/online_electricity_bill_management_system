@@ -17,10 +17,7 @@ function Login() {
         setConsumer({ ...consumer, [e.target.name]: e.target.value })
     }
     const { email,password } = consumer;
-
-    
-
-    const FormHandle = e => {
+ const FormHandle = e => {
         e.preventDefault();
         addDataToServer(consumer)
     }
@@ -29,6 +26,22 @@ function Login() {
             (response) => {
                 console.log(response);
                 alert(" login Successfull");
+                if(response.data.role === "admin")
+                {
+                    localStorage.setItem("loggedinuser",JSON.stringify(response.data));
+                    navigate('/AdminHome',{state:response.data});
+                }
+                else if(response.data.role === "subadmin")
+                {
+                    localStorage.setItem("loggedinuser",JSON.stringify(response.data));
+                    navigate('/SubadminHome',{state:response.data});
+                }
+                else if(response.data.role === "consumer")
+                {
+                    localStorage.setItem("loggedinuser",JSON.stringify(response.data));
+                    navigate('/ConsumerHome',{state:response.data});
+                }
+
             }, (error) => {
                 console.log(error);
                 alert("Invali credentials !!!");
@@ -57,10 +70,10 @@ function Login() {
                                 </div>
                                 <div className="container" >
                                     
-                                    <button  type="submit" class="btn btn-outline-secondary my-2 text-center mr-2 " className="btn btn-primary">Login</button><br/>
+                                    <button  type="submit" className="btn btn-primary">Login</button><br/>
                                     <button  type="button" className="btn btn-primary" onClick={() => {navigate("/RegisterConsumer");}}>New Register </button>
                                     {/*<a href="/RegisterConsumer">Consumer Register</a><br/>
-                                    <a href="/RegisterSubadmin">Subadmin Register</a>*/}
+                                    <a href="/RegisterSubadmin">Subadmin Register</a> btn btn-outline-secondary my-2 text-center mr-2 */}
                                 </div>
                             </form>
                         </div>
