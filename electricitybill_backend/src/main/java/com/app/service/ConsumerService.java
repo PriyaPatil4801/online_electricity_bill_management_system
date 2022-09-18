@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.app.entities.Consumer;
+import com.app.entities.User;
 import com.app.repository.ConsumerRepository;
 
 @Service
@@ -24,4 +25,9 @@ public class ConsumerService {
 		return crepo.save(c);
 	}
 
+	public int delete(int id) 
+	{
+		 crepo.deleteById(id);
+		 return 1;
+	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +22,7 @@ import com.app.service.UserService;
 public class SubadminController {
 
 	@Autowired
-	SubadminService cservice;
+	SubadminService sservice;
 	
 	@Autowired
 	UserService uservice;
@@ -29,7 +30,7 @@ public class SubadminController {
 	@GetMapping("/allSubadmin")
 	public List<Subadmin> getAll()
 	{
-		return cservice.getAll();//no view resolver is needed so no need of view
+		return sservice.getAll();//no view resolver is needed so no need of view
 	}
 	
 	@PostMapping("/regSubadmin")
@@ -44,8 +45,15 @@ public class SubadminController {
 		//System.out.println(z);
 		Subadmin c= new Subadmin(inserted,sr.getName(),sr.getMobile_no(),sr.getAddress(),sr.getCity(),sr.getEmail(),sr.getState(),sr.getZone_id());
 		System.out.println(c);
-		return cservice.registerSubadmin(c);
+		return sservice.registerSubadmin(c);
 		
 		
 	}
+	
+	@GetMapping("/deleteSub/{subadmin_id}")
+	public int delete(@PathVariable ("subadmin_id") int  id)
+	{
+		return sservice.delete(id);
+    }
+
 }

@@ -15,4 +15,7 @@ import com.app.entities.User;
 public interface UserRepository extends JpaRepository<User, Integer>{
 	@Query("select u from User u where email=:e and password=:p")
 	Optional<User> Login(@Param("e") String email,@Param("p") String password);
+	
+	
+
 }

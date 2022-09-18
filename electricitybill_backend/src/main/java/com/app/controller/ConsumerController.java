@@ -4,6 +4,8 @@ package com.app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,7 +41,14 @@ public class ConsumerController {
 		Consumer c= new Consumer(inserted,cr.getName(),cr.getMobile_no(),cr.getAddress(),cr.getCity(),cr.getEmail(),cr.getState(),cr.getZone_id());
 		System.out.println(c);
 		return cservice.registerConsumer(c);
-		
-		
 	}
+	
+	@GetMapping("/delete/{consumer_id}")
+	public int delete(@PathVariable ("consumer_id") int  id)
+	{
+		return cservice.delete(id);
+    }
+
+	
+	
 }

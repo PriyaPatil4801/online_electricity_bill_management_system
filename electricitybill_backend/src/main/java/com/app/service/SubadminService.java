@@ -23,4 +23,10 @@ public class SubadminService {
 	{
 		return srepo.save(c);
 	}
+	
+	public int delete(int id) 
+	{
+		 srepo.deleteById(id);
+		 return 1;
+	}
 }
