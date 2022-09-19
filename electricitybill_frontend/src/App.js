@@ -9,6 +9,12 @@ import AdminHome from './views/admin/AdminHome';
 import SubadminHome from './views/subadmin/SubadminHome';
 import ConsumerHome from './views/consumer/ConsumerHome';
 import AddZone from './views/admin/AddZone';
+import AddUser from './views/admin/AddUser';
+import BillandPaymentReport from './views/admin/BillandPaymentReport';
+import GenerateBills from './views/admin/GenerateBills';
+import ViewConsumer from './views/admin/ViewConsumer';
+import ViewSubAdmin from './views/admin/ViewSubAdmin';
+import AdminProfile from './views/admin/AdminProfile';
 
 
 function App() {
@@ -25,6 +31,12 @@ function App() {
           <Route path="/AdminHome" element={<AdminHome />} />
           <Route path="/SubadminHome" element={<SubadminHome />} />
           <Route path="/ConsumerHome" element={<ConsumerHome />} />
+          <Route path="/AddUser" element={<AddUser />} />
+          <Route path="/BillandPaymentReport" element={<BillandPaymentReport />} />
+          <Route path="/GenerateBills" element={<GenerateBills />} />
+          <Route path="/ViewConsumer" element={<ViewConsumer />} />
+          <Route path="/ViewSubAdmin" element={<ViewSubAdmin />} />
+          <Route path="/AdminProfile" element={<AdminProfile />} />
 
           
         </Routes>

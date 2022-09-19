@@ -1,5 +1,8 @@
+.Root {
+  height: 100% ;
+}
 .App {
-  text-align: center;
+  height: 100% ;
 }
 
 .App-logo {
@@ -14,14 +17,14 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  /* background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  font-size: calc(10px + 2vmin); */
+  height: 100% ;
 }
 
 .App-link {
@@ -35,4 +38,226 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif;}
+body, html {
+  height: 100%;
+  color: #777;
+  line-height: 1.8;
+}
+button{
+  margin: 10px !important;
+}
+
+.buttondecoration
+{
+  height: 50px;
+    width: 100px;
+    font-size: medium !important;
+}
+/* Create a Parallax Effect */
+.bgimg-1, .bgimg-2, .bgimg-3 {
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* First image (Logo. Full height) */
+.bgimg-1 {
+  background-image: url( "../public/bulb2.jpg");
+  min-height: 100%;
+}
+.background{
+  background-color: black;
+  min-height: 100%;
+}
+.top-padding-landing{
+  padding-top: 300px;
+  text-align: center;
+    color: white;
+}
+.top-padding-login{
+  padding-top: 100px;
+}
+.bulbHolder{
+  height: 100%;
+  width:400px;
+}
+
+/* input[type=text], select, textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px; */
+  /* resize: vertical; */
+  /* margin-bottom: 15px; */
+/* -webkit-box-sizing: border-box; 
+  -moz-box-sizing: border-box;  
+  box-sizing: border-box;  
+}
+.registerButton, .loginButton {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px 0px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+  width: 40% !important;
+  height: 10% !important;
+}
+.registerButton:hover,
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+.col-100 {
+  float: left;
+  width: 100% !important;
+  margin-top: 6px !important;
+} */
+input[type=text], input[type=email], input[type=password], input[type=number],select, textarea {
+  width: 100% !important;
+  padding: 12px !important;
+  border: 1px solid #ccc !important;
+  border-radius: 4px !important;
+  resize: vertical !important;
+}
+
+label {
+  padding: 12px 12px 12px 0 !important;
+  display: inline-block !important;
+}
+
+input[type=submit] {
+  background-color: #04AA6D !important;
+  color: white !important;
+  padding: 12px 20px 20px 20px !important;
+  border: none !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  float: right !important;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049 !important;
+}
+
+.container {
+  border-radius: 5px !important;
+  background-color: white !important;
+  padding: 20px !important;
+}
+
+.col-25 {
+  float: left !important;
+  width: 25% !important;
+  margin-top: 6px !important;
+}
+
+.col-50 {
+  float: left !important;
+  width: 50% !important;
+}
+
+.col-75 {
+  float: left !important;
+  width: 75% !important;
+  margin-top: 6px !important;
+}
+.col-33 {
+  float: left !important;
+  width: 33.33% !important;
+  margin-top: 6px !important;
+}
+
+
+
+/* Clear floats after the columns */
+.row:after {
+  content: "" !important;
+  display: table !important;
+  clear: both !important;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.registerButton, .loginButton {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px 0px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+  width: 40% !important;
+}
+
+.err{
+  color:red;
+}
+
+/*Admin pages side panal css*/
+.logo{
+  vertical-align: middle;
+  box-sizing: inherit;
+  border-style: none;
+  width: 100%;
+  height:65px;
+}
+
+.w3-sidebar{
+  background: #222!important;
+}
+.w3-sidebar::-webkit-scrollbar {
+  width: 2px;               /* width of the entire scrollbar */
+}
+.w3-sidebar::-webkit-scrollbar-track {
+  background: #222;        /* color of the tracking area */
+}
+/*Admin Pages top navbar*/
+#main {
+  margin-left: 200px;
+}
+.w3-padding-small{
+  padding-top: 1px!important;
+  padding-bottom: 1px!important;
+}
+.w3-panel{
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+.support{
+  float: right;
+}
+/*Admin Pages content*/
+
+.PageContent{
+  margin-left: 200px;
+}
+
+/*Add zone page*/
+.zonecontainer{
+  border: 1px solid !important;
 }

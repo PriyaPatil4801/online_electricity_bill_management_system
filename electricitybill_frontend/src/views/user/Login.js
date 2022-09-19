@@ -44,39 +44,50 @@ function Login() {
 
             }, (error) => {
                 console.log(error);
-                alert("Invali credentials !!!");
+                alert("Invalid credentials !!!");
             }
         );
     }
     return (
-        <div>
+        <div className= "bgimg-1">
                 
-            <div className="container">
-                <div className="w-100 mx-auto shadow p-5 mt-2 bg-light">
-                <img src={image} height={h} width={w}/>
-                    <div class="jumbotron">
-                        <h1 class="display-4 text-center text-primary "><b>Login</b></h1>
-                        <div>
+            <div className='loginPage'>
+                <div className='row'>
+                    <div className="col-12 col-lg-6 col-xl-5 offset-xl-1 top-padding-login">
+                        
+                        <div className="container">
+                            <img className="center" src={image} height={h} width={w}/>
+                            <div className="row">
+                                <label className="display-4 text-center">Login</label>
+                            </div>
                             <form onSubmit={e => FormHandle(e)} id="contact-form">
-                               
-                                <div class="form-group text-primary">
-                                    <label for="exampleInputemail"></label>
-                                    <input type="text" class="form-control" name="email"  placeholder="Enter Email" value={email} onChange={(e) => onInputChange(e)} />
+                                <div className="row">
+                                <div className="col-25">
+                                    <label for="email">Email ID</label>
                                 </div>
-                               
-                                <div class="form-group text-primary">
-                                    <label for="exampleInputPassword1"></label>
-                                    <input type="password" class="form-control" name="password"  placeholder="Enter Password" value={password} onChange={(e) => onInputChange(e)} />
+                                <div className="col-75">
+                                    <input type="text" id="email" name="email" placeholder="Enter Email" value={email} onChange={(e) => onInputChange(e)}/>
                                 </div>
-                                <div className="container" >
-                                    
-                                    <button  type="submit" className="btn btn-primary">Login</button><br/>
-                                    <button  type="button" className="btn btn-primary" onClick={() => {navigate("/RegisterConsumer");}}>New Register </button>
-                                    {/*<a href="/RegisterConsumer">Consumer Register</a><br/>
-                                    <a href="/RegisterSubadmin">Subadmin Register</a> btn btn-outline-secondary my-2 text-center mr-2 */}
+                                </div>
+                                <div className="row">
+                                <div className="col-25">
+                                    <label for="pass">Password</label>
+                                </div>
+                                <div className="col-75">
+                                    <input type="password" id="pass" name="password" placeholder="Enter Password" value={password} onChange={(e) => onInputChange(e)}/>
+                                </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-50">
+                                        <button  type="submit" className="loginButton buttondecoration">Login </button>
+                                    </div>
+                                    <div className="col-50">
+                                        <button  type="button" className="registerButton buttondecoration" onClick={() => {navigate("/");}}>Cancel</button>
+                                    </div>
                                 </div>
                             </form>
                         </div>
+                        
                     </div>
                 </div>
             </div>
