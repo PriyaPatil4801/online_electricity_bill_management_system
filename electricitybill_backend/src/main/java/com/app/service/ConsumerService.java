@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.app.entities.Consumer;
-import com.app.entities.User;
 import com.app.repository.ConsumerRepository;
 
 @Service
@@ -15,19 +14,20 @@ public class ConsumerService {
 	@Autowired
 	ConsumerRepository crepo;
 	
-	public List<Consumer> getAll()
+	public List<Consumer> getbyZone(int zone_id)
 	{
-		return crepo.findAll();
+		return crepo.getbyZone(zone_id);
 	}
 	
 	public Consumer registerConsumer(Consumer c)
 	{
 		return crepo.save(c);
 	}
-
-	public int delete(int id) 
+	
+	public int delete(int pid)
 	{
-		 crepo.deleteById(id);
+		 crepo.deleteById(pid);
 		 return 1;
 	}
+
 }

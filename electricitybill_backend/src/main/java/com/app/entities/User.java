@@ -13,16 +13,16 @@ public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int user_id;
+	private int user_id;
 	
 	@Column
-	String email;
+	private String email;
 	
 	@Column
-	String password;
+	private String password;
 	
 	@Column
-	String role;
+	private String role;
 
 	
 	public User() {

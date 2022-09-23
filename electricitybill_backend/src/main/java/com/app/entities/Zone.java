@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -12,11 +13,11 @@ import javax.persistence.Table;
 public class Zone {
 	
 	@Id
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int zone_id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int zone_id;
 	
 	@Column
-	String zone_name;
+	private String zone_name;
 
 	public Zone() {
 		super();
@@ -48,6 +49,5 @@ public class Zone {
 	public String toString() {
 		return "Zone [zone_id=" + zone_id + ", zone_name=" + zone_name + "]";
 	}
-	
 
 }

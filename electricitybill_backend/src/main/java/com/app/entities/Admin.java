@@ -1,10 +1,15 @@
 package com.app.entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -15,8 +20,9 @@ public class Admin {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer admin_id;
 	
-	@Column
-	private Integer user_id;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="user_id2",referencedColumnName="user_id")
+	private User user;
 	
 	@Column
 	private String name;
@@ -36,26 +42,27 @@ public class Admin {
 	@Column
 	private String state;
 	
-	@Column
-	private Integer zone_id;
-
+	/*@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="zone_id2",referencedColumnName="zone_id")
+	private Zone zone;
+*/
 	public Admin() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Admin(Integer admin_id, Integer user_id, String name, String mobile_no, String address, String city,
-			String email, String state, Integer zone_id) {
+	public Admin(Integer admin_id, User user, String name, String mobile_no, String address, String city,
+			String email, String state) {
 		super();
 		this.admin_id = admin_id;
-		this.user_id = user_id;
+		this.user = user;
 		this.name = name;
 		this.mobile_no = mobile_no;
 		this.address = address;
 		this.city = city;
 		this.email = email;
 		this.state = state;
-		this.zone_id = zone_id;
+		//this.zone = zone;
 	}
 
 	public Integer getAdmin_id() {
@@ -66,12 +73,12 @@ public class Admin {
 		this.admin_id = admin_id;
 	}
 
-	public Integer getUser_id() {
-		return user_id;
+	public User getUser() {
+		return user;
 	}
 
-	public void setUser_id(Integer user_id) {
-		this.user_id = user_id;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public String getName() {
@@ -122,20 +129,23 @@ public class Admin {
 		this.state = state;
 	}
 
-	public Integer getZone_id() {
-		return zone_id;
+	/*public Zone getZone() {
+		return zone;
 	}
 
-	public void setZone_id(Integer zone_id) {
-		this.zone_id = zone_id;
+	public void setZone(Zone zone) {
+		this.zone = zone;
 	}
-
+*/
 	@Override
 	public String toString() {
-		return "Admin [admin_id=" + admin_id + ", user_id=" + user_id + ", name=" + name + ", mobile_no=" + mobile_no
-				+ ", address=" + address + ", city=" + city + ", email=" + email + ", state=" + state + ", zone_id="
-				+ zone_id + "]";
+		return "Admin [admin_id=" + admin_id + ", user_id=" + user + ", name=" + name + ", mobile_no=" + mobile_no
+				+ ", address=" + address + ", city=" + city + ", email=" + email + ", state=" + state 
+				+ "]";
 	}
+	
+	
+	
 
 	
 }

@@ -19,4 +19,9 @@ public class ZoneService {
 	{
 		return zrepo.save(u);
 	}
+	public int delete(int pid)
+	{
+		 zrepo.deleteById(pid);
+		 return 1;
+	}
 }

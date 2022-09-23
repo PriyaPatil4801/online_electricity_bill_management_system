@@ -3,12 +3,16 @@ package com.app.entities;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name="sub_admin")
@@ -16,32 +20,34 @@ public class Subadmin {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int subadmin_id;
+	private int subadmin_id;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="user_id1",referencedColumnName="user_id")
-	User user_id1;
+	private User user_id1;
 	
 	@Column
-	String name;
+	private String name;
 	
 	@Column
-	String mobile_no;
+	private String mobile_no;
 	
 	@Column
-	String address;
+	private String address;
 	
 	@Column
-	String city;
+	private String city;
 	
 	@Column
-	String email;
+	private String email;
 	
 	@Column
-	String state;
+	private String state;
 	
-	@Column
-	int zone_id;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="zone_id1",referencedColumnName="zone_id")
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	private Zone zone;
 
 	public Subadmin() {
 		super();
@@ -49,9 +55,8 @@ public class Subadmin {
 	}
 
 	public Subadmin(User user_id1, String name, String mobile_no, String address, String city,
-			String email, String state, int zone_id) {
+			String email, String state, Zone zone) {
 		super();
-		//this.subadmin_id = subadmin_id;
 		this.user_id1 = user_id1;
 		this.name = name;
 		this.mobile_no = mobile_no;
@@ -59,7 +64,7 @@ public class Subadmin {
 		this.city = city;
 		this.email = email;
 		this.state = state;
-		this.zone_id = zone_id;
+		this.zone = zone;
 	}
 
 	public int getSubadmin_id() {
@@ -126,20 +131,19 @@ public class Subadmin {
 		this.state = state;
 	}
 
-	public int getZone_id() {
-		return zone_id;
+	public Zone getZone() {
+		return zone;
 	}
 
-	public void setZone_id(int zone_id) {
-		this.zone_id = zone_id;
+	public void setZone(Zone zone) {
+		this.zone = zone;
 	}
 
 	@Override
 	public String toString() {
 		return "Subadmin [subadmin_id=" + subadmin_id + ", user_id1=" + user_id1 + ", name=" + name + ", mobile_no="
 				+ mobile_no + ", address=" + address + ", city=" + city + ", email=" + email + ", state=" + state
-				+ ", zone_id=" + zone_id + "]";
+				+ ", zone=" + zone + "]";
 	}
-	
 
 }

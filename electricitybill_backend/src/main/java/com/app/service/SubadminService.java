@@ -19,14 +19,17 @@ public class SubadminService {
 		return srepo.findAll();
 	}
 	
+	public List<Subadmin> getbyZone(int zone_id)
+	{
+		return srepo.getbyZone(zone_id);
+	}
 	public Subadmin registerSubadmin(Subadmin c)
 	{
 		return srepo.save(c);
 	}
-	
-	public int delete(int id) 
+	public int delete(int pid)
 	{
-		 srepo.deleteById(id);
+		 srepo.deleteById(pid);
 		 return 1;
 	}
 }

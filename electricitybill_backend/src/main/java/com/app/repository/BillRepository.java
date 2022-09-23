@@ -1,19 +1,17 @@
 package com.app.repository;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.app.entities.Consumer;
+import com.app.entities.Bill;
 
 @Transactional
 @Repository
-public interface ConsumerRepository extends JpaRepository<Consumer, Integer> {
+public interface BillRepository extends JpaRepository<Bill, Integer>  {
 
-	@Query("select c from Consumer c where zone_id=:z")
-	public List<Consumer> getbyZone(@Param("z") int zone_id);
+	//@Query("insert into Bill values()")
+	//public Bill generateBill(@Param("c") int consumer_id);
 }

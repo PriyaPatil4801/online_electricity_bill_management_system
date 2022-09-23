@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import com.app.entities.Subadmin;
 import com.app.entities.SubadminRegister;
 import com.app.entities.User;
@@ -46,14 +45,18 @@ public class SubadminController {
 		Subadmin c= new Subadmin(inserted,sr.getName(),sr.getMobile_no(),sr.getAddress(),sr.getCity(),sr.getEmail(),sr.getState(),sr.getZone_id());
 		System.out.println(c);
 		return sservice.registerSubadmin(c);
-		
-		
 	}
 	
-	@GetMapping("/deleteSub/{subadmin_id}")
-	public int delete(@PathVariable ("subadmin_id") int  id)
+	@GetMapping("/deleteSubadmin/{pid}")
+	public int delete(@PathVariable ("pid") int  id)
 	{
 		return sservice.delete(id);
-    }
-
+		 
+	}
+	
+	@GetMapping("/getSubAdminsByZone/{zid}")
+	public List<Subadmin> getbyZone(@PathVariable ("zid") int zone_id)
+	{
+		return sservice.getbyZone(zone_id);
+	}
 }

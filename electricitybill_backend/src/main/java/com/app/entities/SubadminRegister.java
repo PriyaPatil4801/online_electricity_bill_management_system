@@ -5,18 +5,11 @@ public class SubadminRegister {
 	String email;
 	String password;
 	String name;
-	
 	String mobile_no;
-	
 	String address;
-	
-	String city;
-	
-	
-	
-	String state;
-	
-	int zone_id;
+	String city;		
+	String state;	
+	Zone zone_id;
 
 	public SubadminRegister() {
 		super();
@@ -24,7 +17,7 @@ public class SubadminRegister {
 	}
 
 	public SubadminRegister(String email, String password, String name, String mobile_no, String address, String city,
-			String state, int zone_id) {
+			String state, Zone zone_id) {
 		super();
 		this.email = email;
 		this.password = password;
@@ -92,11 +85,11 @@ public class SubadminRegister {
 		this.state = state;
 	}
 
-	public int getZone_id() {
+	public Zone getZone_id() {
 		return zone_id;
 	}
 
-	public void setZone_id(int zone_id) {
+	public void setZone_id(Zone zone_id) {
 		this.zone_id = zone_id;
 	}
 
@@ -106,6 +99,5 @@ public class SubadminRegister {
 				+ mobile_no + ", address=" + address + ", city=" + city + ", state=" + state + ", zone_id=" + zone_id
 				+ "]";
 	}
-
 	
 }
