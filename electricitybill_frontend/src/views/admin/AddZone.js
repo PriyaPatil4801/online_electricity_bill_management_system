@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import image from '../images/logo.gif';
@@ -90,19 +90,19 @@ function AddZone() {
             <div className='PageContent'>
                 <div className='AddZone'>
                     <div className='row'>
-                        <div className="col-12 col-lg-6 col-xl-5 offset-xl-1 top-padding-login">
+                        <div className="col-12 col-lg-10 col-xl-10 offset-xl-1 top-padding">
                             
-                            <div className="container zonecontainer">
+                            <div className="container PageContainer">
                                 <div className="row">
                                     <label className="display-4 text-center">Add Zone</label>
                                 </div>
                                 <form onSubmit={e => FormHandle(e)} id="contact-form">
                                     <div className="row">
                                     <div className="col-25">
-                                        <label>Zone Name</label>
+                                        <label className="display-6 text-center">Zone Name</label>
                                     </div>
                                     <div className="col-75">
-                                        <input type="text" id="zone_name" name="zone_name" placeholder="Enter new zone" value={zone_name} onChange={(e) => onInputChange(e)}/>
+                                        <input className="display-6" type="text" id="zone_name" name="zone_name" placeholder="Enter new zone" value={zone_name} onChange={(e) => onInputChange(e)}/>
                                     </div>
                                     </div>
                                     <div className="row">

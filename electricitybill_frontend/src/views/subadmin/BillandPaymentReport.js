@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import image from '../images/logo.gif';
 
 
-function SubAdminHome() {
+function SubAdminBillandPaymentReport() {
     let navigate=useNavigate();
 
     const handleLogOut = e => {
@@ -13,7 +13,7 @@ function SubAdminHome() {
     }
     return(
         <div>
-             <div className="w3-black">
+           <div className="w3-black">
             <nav className="w3-sidebar w3-bar-block w3-small  w3-center">
                 <img src={image} className="logo" onClick={() => {navigate("/SubAdminHome");}}/>
                 <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/SubAdminProfile");}}>
@@ -61,4 +61,4 @@ function SubAdminHome() {
         </div>
     )
 }
-export default SubAdminHome;
+export default SubAdminBillandPaymentReport;

@@ -55,7 +55,7 @@ function AdminHome() {
                     </div> 
                 </div>
             </div>
-            <div>
+            <div className='PageContent'>
 
             </div>
         </div>

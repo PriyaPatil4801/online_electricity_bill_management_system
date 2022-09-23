@@ -33,8 +33,10 @@ function App() {
           <Route path="" element={<Home/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/RegisterConsumer" element={<RegisterComsumer />} />
+          <Route path="/RegisterSubadmin" element={<RegisterSubadmin />} />
           <Route path="/AddZone" element={<AddZone/>} />
           <Route path="/AdminHome" element={<AdminHome />} />
+          <Route path="/SubadminHome" element={<SubadminHome />} />
           <Route path="/ConsumerHome" element={<ConsumerHome />} />
           <Route path="/AddUser" element={<AddUser />} />
           <Route path="/BillandPaymentReport" element={<BillandPaymentReport />} />
@@ -42,16 +44,9 @@ function App() {
           <Route path="/ViewConsumer" element={<ViewConsumer />} />
           <Route path="/ViewSubAdmin" element={<ViewSubAdmin />} />
           <Route path="/AdminProfile" element={<AdminProfile />} />
-          <Route path="/SubAdminProfile" element={<SubAdminProfile />} />
-          <Route path="/SubadminHome" element={<SubadminHome />} />
-          <Route path="/SubAdminAddUser" element={<SubAdminAddUser />} />
-          <Route path="/SubAdminViewConsumer" element={<SubAdminViewConsumer />} />
-          <Route path="/SubAdminBillandPaymentReport" element={<SubAdminBillandPaymentReport />} />
-          <Route path="/SubAdminGenerateBills" element={<SubAdminGenerateBills />} />
           <Route path="/ConsumerProfile" element={<ConsumerProfile />} />
           <Route path="/PayBill" element={<PayBill />} />
           <Route path="/PaymentHistory" element={<PaymentHistory/>} />
-
           
         </Routes>
         

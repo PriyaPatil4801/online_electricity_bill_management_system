@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import image from '../images/logo.gif';
 
-function ConsumerHome() {
+function PayBill() {
     let navigate=useNavigate();
 
     const handleLogOut = e => {
@@ -44,4 +44,4 @@ function ConsumerHome() {
         </div>
     )
 }
-export default ConsumerHome;
+export default PayBill;
