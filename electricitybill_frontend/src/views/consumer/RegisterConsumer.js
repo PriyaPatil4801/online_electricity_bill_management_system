@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import image from '../images/login.gif';
@@ -7,6 +7,7 @@ function RegisterComsumer() {
     let navigate=useNavigate();
     let w=200;
     let h=200;
+    const[zones, setZones]=useState([]);
     const [user, setUser] = useState({
            
         name: '',
@@ -15,7 +16,7 @@ function RegisterComsumer() {
         city:'',
         email: '',
         state:'',
-        zone_name:'',
+        zone_id:'',
         password:'',
         confirmPassword:''
     });
@@ -26,7 +27,7 @@ function RegisterComsumer() {
         city:'',
         email: '',
         state:'',
-        zone_name:'',
+        zone_id:'',
         password:'',
         confirmPassword:''
       })
@@ -44,7 +45,7 @@ function RegisterComsumer() {
             city:'',
             email: '',
             state:'',
-            zone_name:'',
+            zone_id:'',
             password:'',
             confirmPassword:''
         });
@@ -55,7 +56,7 @@ function RegisterComsumer() {
             city:'',
             email: '',
             state:'',
-            zone_name:'',
+            zone_id:'',
             password:'',
             confirmPassword:''
         });
@@ -114,7 +115,7 @@ function RegisterComsumer() {
                 }
                 break;
 
-            case "zone_name":
+            case "zone_id":
                 if (!value || value == "0") {
                 stateObj[name] = "Please select zone.";
                 //isValid = false;
@@ -154,7 +155,7 @@ function RegisterComsumer() {
         });
       }
 
-    const {name,mobile_no,address,city,email,state,zone_name,password,confirmPassword} = user;
+    const {name,mobile_no,address,city,email,state,zone_id,password,confirmPassword} = user;
     const FormHandle = e => {
 
         e.preventDefault();
@@ -191,6 +192,27 @@ function RegisterComsumer() {
             }
         );
     }
+    const getAvailableZones = () => {
+        axios.get("http://localhost:8080/getAvailableZones").then(
+            (response) => {
+                console.log(response);
+                setZones( response.data);
+                //consumers = JSON.parse(response);
+                //alert("Added Successfully");
+                
+            }, (error) => {
+                console.log(error);
+                alert("Something went wrong while fetching zones. Please try again after sometime.");
+            }
+        );
+    }
+    //react hook to handle component side effect.
+    useEffect(()=>{
+        
+        getAvailableZones();
+        
+        
+    },[]);
     return (
         <div className= "bgimg-1">   
             <div className='registerPage'>
@@ -200,7 +222,7 @@ function RegisterComsumer() {
                         <div className="container">
                             <img className="center" src={image} height={h} width={w}/>
                             <div className="row">
-                                <label className="display-4 text-center">SignUp</label>
+                                <label className="display-4 text-center center">SignUp</label>
                             </div>
                             <form onSubmit={e => FormHandle(e)} id="contact-form">
                                 <div className="row">
@@ -259,17 +281,22 @@ function RegisterComsumer() {
                                 </div>
                                 <div className="row">
                                 <div className="col-25">
-                                    <label for="zone_name">Zone name</label>
+                                    <label for="zone_id">Zone name</label>
                                 </div>
                                 <div className="col-75">
-                                    <select  aria-label=".form-select-lg example" name="zone_name" value={zone_name} onChange={(e) => onInputChange(e)} onBlur={validateInput} >
-                                        <option value="0" selected>Open this select menu</option>
-                                        <option value="1">Katraj</option>
+                                    <select  aria-label=".form-select-lg example" name="zone_id" value={zone_id} onChange={(e) => onInputChange(e)} onBlur={validateInput} >
+                                        <option value="0">Open this select menu</option>
+                                        {zones.map((val,key) => {
+                                                    return (
+                                                        <option value={val.zone_id}>{val.zone_name}</option>
+                                                    )
+                                            })}
+                                        {/* <option value="1">Katraj</option>
                                         <option value="2">Kothrud</option>
                                         <option value="3">Hadapsar</option>
-                                        <option value="4">Nigdi</option>
+                                        <option value="4">Nigdi</option> */}
                                     </select>
-                                    {error.zone_name && <span className='err'>{error.zone_name}</span>}
+                                    {error.zone_id && <span className='err'>{error.zone_id}</span>}
                                 </div>
                                 </div>
                                 <div className="row">

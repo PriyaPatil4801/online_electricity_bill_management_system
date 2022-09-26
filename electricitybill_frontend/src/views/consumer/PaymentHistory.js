@@ -1,14 +1,48 @@
-
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import image from '../images/logo.gif';
 
 function PaymentHistory() {
     let navigate=useNavigate();
-
+    const [hide, toggleHide]=useState(true);
+    const [paidBills,setPaidBills] =useState([]);
     const handleLogOut = e => {
         e.preventDefault();
+        localStorage.clear();
         navigate("/");
     }
+    const getDataFromServer = ( ) => {
+        let userID=JSON.parse(localStorage.getItem("consumerID"));
+        axios.get(`http://localhost:8080/fetchPaidBills/${userID}`).then(
+            (response) => {
+                console.log(response);
+                setPaidBills( response.data);
+                console.log(paidBills);
+                //alert("Added Successfully");
+                
+            }, (error) => {
+                console.log(error);
+                alert("Something went wrong while fetching payment history. Please try again after sometime.");
+            }
+        );
+    }
+    const showSnackBar = () =>{
+        var x = document.getElementById("snackbar");
+        x.className = "show";
+        setTimeout(()=>{ x.className = x.className.replace("show", ""); }, 3000);
+    }
+    //react hook to handle component side effect. checking the user authorization before component load and only then showing content.
+    useEffect(()=>{
+        let user=JSON.parse(localStorage.getItem("loggedinuser"));
+        if(user && user.user_id){
+            toggleHide(false);
+            getDataFromServer();
+        }else{
+            showSnackBar();
+            setTimeout(()=>{navigate("/");},3000);  
+        }
+    },[]);
     return(
         <div>
             <div className="w3-black">
@@ -38,8 +72,62 @@ function PaymentHistory() {
                     </div> 
                 </div>
             </div>
-            <div>
-
+            <div className='PageContent'>
+                <div className='PaymentHistory'hidden={hide}>
+                    <div className='row'>
+                        <div className="col-12 col-lg-10 col-xl-10 offset-xl-1 top-padding">
+                            
+                            <div className="container PageContainer">
+                                <div className="row">
+                                    <label className="display-4 text-center">Payment History</label>
+                                </div>
+                                <div className="row">
+                                    <div className="col-12 col-lg-10 col-xl-10 offset-xl-1 top-padding">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Bill ID</th>
+                                                    <th>Bill Date</th>
+                                                    <th>Units</th>
+                                                    <th>Bill Amount</th>
+                                                    <th>Tax</th>
+                                                    <th>Dues</th>
+                                                    <th>Fine</th>
+                                                    <th>Total Bill</th>
+                                                    <th>Due Date</th>
+                                                    <th>Payment Date</th>
+                                                    <th>Payment ID</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {paidBills.map((val,key) => {
+                                                return (
+                                                    <tr key={key}>
+                                                        <td>{val.bill_id}</td>
+                                                        <td>{val.bill_date}</td>
+                                                        <td>{val.units}</td>
+                                                        <td>{val.current_billAmt}</td>
+                                                        <td>{val.tax}</td>
+                                                        <td>{val.dues}</td>
+                                                        <td>{val.fine}</td>
+                                                        <td>{val.total_billAmt}</td>
+                                                        <td>{val.due_date}</td>
+                                                        <td>{val.payment_date}</td>
+                                                        <td>{val.payment_no}</td>
+                                                        <td>{val.status}</td>
+                                                    </tr>
+                                                    )
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="snackbar">You are not logged in! Redirecting to login page!!</div>
             </div>
         </div>
     )

@@ -58,7 +58,7 @@ function Login() {
                         <div className="container">
                             <img className="center" src={image} height={h} width={w}/>
                             <div className="row">
-                                <label className="display-4 text-center">Login</label>
+                                <label className="display-4 text-center center">Login</label>
                             </div>
                             <form onSubmit={e => FormHandle(e)} id="contact-form">
                                 <div className="row">

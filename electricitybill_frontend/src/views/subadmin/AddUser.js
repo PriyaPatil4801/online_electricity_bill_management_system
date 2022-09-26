@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import image from '../images/logo.gif';
@@ -9,6 +9,8 @@ function SubAdminAddUser() {
     let navigate=useNavigate();
     let w=200;
     let h=200;
+    const [hide, toggleHide]=useState(true);
+    const [zones, setZones] = useState([]);
     const [user, setUser] = useState({
         role: '',  
         name: '',
@@ -179,18 +181,7 @@ function SubAdminAddUser() {
         
     }
     const addDataToServer = (data) => {
-        if(data.role === "1"){
-            axios.post("http://localhost:8080/regSubadmin", data).then(
-                (response) => {
-                    console.log(response);
-                    alert("User registered successfully!");
-                    
-                }, (error) => {
-                    console.log(error);
-                    alert("error while registering User. Please check entered information is correct and try again.");
-                }
-            );
-        }else if(data.role === "2"){
+       
             axios.post("http://localhost:8080/regConsumer", data).then(
                 (response) => {
                     console.log(response);
@@ -201,14 +192,45 @@ function SubAdminAddUser() {
                     alert("error while registering User. Please check entered information is correct and try again.");
                 }
             );
-        }
         
     }
-
+    const getDataFromServer = () => {
+        axios.get("http://localhost:8080/getAvailableZones/").then(
+            (response) => {
+                console.log(response);
+                setZones( response.data);
+                //consumers = JSON.parse(response);
+                //alert("Added Successfully");
+                
+            }, (error) => {
+                console.log(error);
+                alert("Something went wrong while fetching consumers. Please try again after sometime.");
+            }
+        );
+    }
     const handleLogOut = e => {
         e.preventDefault();
+        
+        localStorage.clear();
         navigate("/");
     }
+    const showSnackBar = () =>{
+        var x = document.getElementById("snackbar");
+        x.className = "show";
+        setTimeout(()=>{ x.className = x.className.replace("show", ""); }, 3000);
+    }
+    //react hook to handle component side effect. checking the user authorization before component load and only then showing content.
+    useEffect(()=>{
+        let user=JSON.parse(localStorage.getItem("loggedinuser"));
+        if(user && user.user_id){
+            toggleHide(false);
+            getDataFromServer();
+        }else{
+            showSnackBar();
+            setTimeout(()=>{navigate("/");},3000);  
+        }
+        
+    },[]);
     return(
         <div>
            <div className="w3-black">
@@ -254,7 +276,7 @@ function SubAdminAddUser() {
             </div>
         </div>
             <div className='PageContent'>
-                <div className='AddUser'>
+                <div className='AddUser' hidden={hide}>
                     <div className='row'>
                         <div className="col-12 col-lg-10 col-xl-10 offset-xl-1 top-padding">
                             <div className="container PageContainer">
@@ -269,8 +291,7 @@ function SubAdminAddUser() {
                                         <div className="col-75">
                                             <select className="display-6" aria-label=".form-select-lg example" name="role" value={role} onChange={(e) => onInputChange(e)} onBlur={validateInput} >
                                                 <option value="0">Open this select menu</option>
-                                                <option value="1">Sub Admin</option>
-                                                <option value="2">Consumer</option>
+                                                <option value="1">Consumer</option>
                                             </select>
                                             {error.role && <span className='err'>{error.role}</span>}
                                         </div>
@@ -336,10 +357,15 @@ function SubAdminAddUser() {
                                         <div className="col-75">
                                             <select  className="display-6" aria-label=".form-select-lg example" name="zone_name" value={zone_name} onChange={(e) => onInputChange(e)} onBlur={validateInput} >
                                                 <option value="0">Open this select menu</option>
-                                                <option value="1">Katraj</option>
+                                                {zones.map((val,key) => {
+                                                    return (
+                                                        <option value={val.zone_id}>{val.zone_name}</option>
+                                                    )
+                                                })}
+                                                {/* <option value="1">Katraj</option>
                                                 <option value="2">Kothrud</option>
                                                 <option value="3">Hadapsar</option>
-                                                <option value="4">Nigdi</option>
+                                                <option value="4">Nigdi</option> */}
                                             </select>
                                             {error.zone_name && <span className='err'>{error.zone_name}</span>}
                                         </div>
@@ -376,6 +402,7 @@ function SubAdminAddUser() {
                         </div>
                     </div>
                 </div>
+                <div id="snackbar">You are not logged in! Redirecting to login page!!</div>
             </div>
         </div>
     )

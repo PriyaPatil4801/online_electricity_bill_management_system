@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import image from '../images/logo.gif';
@@ -7,12 +7,19 @@ function AddZone() {
     let w=200;
     let h=200;
     let navigate=useNavigate();
+    
+    const [hide, toggleHide]=useState(true);
     const [zone, setZone] = useState({
         
         zone_name:''
        
     });
-    
+    //toast notification show method
+    const showSnackBar = () =>{
+        var x = document.getElementById("snackbar");
+        x.className = "show";
+        setTimeout(()=>{ x.className = x.className.replace("show", ""); }, 3000);
+    }
     const onInputChange = e => {
         setZone({ ...zone, [e.target.name]: e.target.value })
     }
@@ -22,15 +29,19 @@ function AddZone() {
             zone_name:''
         });
     }
+    //log out
     const handleLogOut = e => {
         e.preventDefault();
+        localStorage.clear();
         navigate("/");
     }
+    //this method will trigger on form submit
     const FormHandle = e => {
         e.preventDefault();
         console.log(JSON.stringify(zone))
         addDataToServer(zone)
     }
+    //post api call to add new zone to database
     const addDataToServer = (data) => {
         axios.post("http://localhost:8080/addzone", data).then(
             (response) => {
@@ -43,6 +54,17 @@ function AddZone() {
             }
         );
     }
+    //react hook to handle component side effect. checking the user authorization before component load and only then showing content.
+    useEffect(()=>{
+        let user=JSON.parse(localStorage.getItem("loggedinuser"));
+        if(user && user.user_id){
+            toggleHide(false);
+        }else{
+            showSnackBar();
+            setTimeout(()=>{navigate("/");},3000);  
+        }
+        
+    },[]);
     return (
         <div>
             <div className="w3-black">
@@ -88,7 +110,7 @@ function AddZone() {
                 </div>
             </div>
             <div className='PageContent'>
-                <div className='AddZone'>
+                <div className='AddZone' hidden={hide}>
                     <div className='row'>
                         <div className="col-12 col-lg-10 col-xl-10 offset-xl-1 top-padding">
                             
@@ -119,6 +141,7 @@ function AddZone() {
                         </div>
                     </div>
                 </div>
+                <div id="snackbar">You are not logged in! Redirecting to login page!!</div>
             </div>
         </div>
     )

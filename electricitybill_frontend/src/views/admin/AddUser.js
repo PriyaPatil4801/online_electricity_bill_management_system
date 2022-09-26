@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import image from '../images/logo.gif';
@@ -9,6 +9,8 @@ function AddUser() {
     let navigate=useNavigate();
     let w=200;
     let h=200;
+    const [hide, toggleHide]=useState(true); //prop to decide whether to show content or not
+    const [zones, setZones] = useState([]);  //list  of zones
     const [user, setUser] = useState({
         role: '',  
         name: '',
@@ -17,7 +19,7 @@ function AddUser() {
         city:'',
         email: '',
         state:'',
-        zone_name:'',
+        zone_id:'',
         password:'',
         confirmPassword:''
     });
@@ -29,16 +31,22 @@ function AddUser() {
         city:'',
         email: '',
         state:'',
-        zone_name:'',
+        zone_id:'',
         password:'',
         confirmPassword:''
       })
-    
+    //toaster notification show message
+    const showSnackBar = () =>{
+        var x = document.getElementById("snackbar");
+        x.className = "show";
+        setTimeout(()=>{ x.className = x.className.replace("show", ""); }, 3000);
+    }
+
     const onInputChange = e => {
         setUser({ ...user, [e.target.name]: e.target.value });
         validateInput(e);
     }
-
+    
     const reloadPage = () => {
         setUser({
             role: '',
@@ -48,7 +56,7 @@ function AddUser() {
             city:'',
             email: '',
             state:'',
-            zone_name:'',
+            zone_id:'',
             password:'',
             confirmPassword:''
         });
@@ -60,12 +68,12 @@ function AddUser() {
             city:'',
             email: '',
             state:'',
-            zone_name:'',
+            zone_id:'',
             password:'',
             confirmPassword:''
         });
     }
-
+    //form validation
     const validateInput = e => {
         let { name, value } = e.target;
         let isValid = true;
@@ -129,7 +137,7 @@ function AddUser() {
                 }
                 break;
 
-            case "zone_name":
+            case "zone_id":
                 if (!value || value == "0") {
                 stateObj[name] = "Please select zone.";
                 isValid = false;
@@ -169,7 +177,8 @@ function AddUser() {
         });
       }
 
-    const {role,name,mobile_no,address,city,email,state,zone_name,password,confirmPassword} = user;
+    const {role,name,mobile_no,address,city,email,state,zone_id,password,confirmPassword} = user;
+    //this method will trigger on form submit
     const FormHandle = e => {
         e.preventDefault();
         console.log(JSON.stringify(user))
@@ -178,6 +187,7 @@ function AddUser() {
         
         
     }
+    //calling register apis w.r.t. selected role
     const addDataToServer = (data) => {
         if(data.role === "1"){
             axios.post("http://localhost:8080/regSubadmin", data).then(
@@ -204,11 +214,39 @@ function AddUser() {
         }
         
     }
-
+    //fetching avaliable zones
+    const getDataFromServer = () => {
+        axios.get("http://localhost:8080/getAvailableZones/").then(
+            (response) => {
+                console.log(response);
+                setZones( response.data);
+                //consumers = JSON.parse(response);
+                //alert("Added Successfully");
+                
+            }, (error) => {
+                console.log(error);
+                alert("Something went wrong while fetching zones. Please try again after sometime.");
+            }
+        );
+    }
+    //logout method
     const handleLogOut = e => {
         e.preventDefault();
+        localStorage.clear(); //make localstorage empty before logout
         navigate("/");
     }
+    //react hook to handle component side effect. checking the user authorization before component load and only then showing content.
+    useEffect(()=>{
+        let user=JSON.parse(localStorage.getItem("loggedinuser"));
+        if(user && user.user_id){
+            toggleHide(false);
+            getDataFromServer();
+        }else{
+            showSnackBar();
+            setTimeout(()=>{navigate("/");},3000);  
+        }
+        
+    },[]);
     return(
         <div>
             <div className="w3-black">
@@ -254,7 +292,7 @@ function AddUser() {
                 </div>
             </div>
             <div className='PageContent'>
-                <div className='AddUser'>
+                <div className='AddUser' hidden={hide}>
                     <div className='row'>
                         <div className="col-12 col-lg-10 col-xl-10 offset-xl-1 top-padding">
                             <div className="container PageContainer">
@@ -272,7 +310,7 @@ function AddUser() {
                                                 <option value="1">Sub Admin</option>
                                                 <option value="2">Consumer</option>
                                             </select>
-                                            {error.zone_name && <span className='err'>{error.zone_name}</span>}
+                                            {error.zone_id && <span className='err'>{error.zone_id}</span>}
                                         </div>
                                     </div>
                                     <div className="row">
@@ -331,17 +369,22 @@ function AddUser() {
                                     </div>
                                     <div className="row">
                                         <div className="col-25">
-                                            <label className="display-6 text-center" for="zone_name">Zone Name : </label>
+                                            <label className="display-6 text-center" for="zone_id">Zone Name : </label>
                                         </div>
                                         <div className="col-75">
-                                            <select  className="display-6" aria-label=".form-select-lg example" name="zone_name" value={zone_name} onChange={(e) => onInputChange(e)} onBlur={validateInput} >
+                                            <select  className="display-6" aria-label=".form-select-lg example" name="zone_id" value={zone_id} onChange={(e) => onInputChange(e)} onBlur={validateInput} >
                                                 <option value="0">Open this select menu</option>
-                                                <option value="1">Katraj</option>
+                                                {zones.map((val,key) => {
+                                                    return (
+                                                        <option value={val.zone_id}>{val.zone_name}</option>
+                                                    )
+                                                })}
+                                                {/* <option value="1">Katraj</option>
                                                 <option value="2">Kothrud</option>
                                                 <option value="3">Hadapsar</option>
-                                                <option value="4">Nigdi</option>
+                                                <option value="4">Nigdi</option> */}
                                             </select>
-                                            {error.zone_name && <span className='err'>{error.zone_name}</span>}
+                                            {error.zone_id && <span className='err'>{error.zone_id}</span>}
                                         </div>
                                     </div>
                                     <div className="row">
@@ -376,6 +419,7 @@ function AddUser() {
                         </div>
                     </div>
                 </div>
+                <div id="snackbar">You are not logged in! Redirecting to login page!!</div>
             </div>
         </div>
     )

@@ -8,12 +8,10 @@ import image from '../images/logo.gif';
 function AdminProfile() {
     let firstentry=true;
     let navigate=useNavigate();
-    useEffect(()=>{
-        getDataFromServer();
-    },[]);
+    const [hide, toggleHide]=useState(true);
     const [admin, setAdmin] = useState({  
-        user_id2: 1,
-        admin_id: 1,
+        user_id2: '',
+        admin_id: '',
         name:'',
         mobile_no:'',
         address: '',
@@ -40,16 +38,23 @@ function AdminProfile() {
         state:''
       });
     const {user_id2,admin_id,name, mobile_no, address, city, email, state} = updatedAdmin;
+    //handle logout 
     const handleLogOut = e => {
         e.preventDefault();
+        localStorage.clear();
         navigate("/");
     }
-
+    //toast notification show
+    const showSnackBar = () =>{
+        var x = document.getElementById("snackbar");
+        x.className = "show";
+        setTimeout(()=>{ x.className = x.className.replace("show", ""); }, 3000);
+    }
     
     const onInputChange = e => {
         setUpdatedAdmin({ ...updatedAdmin, [e.target.name]: e.target.value })
     }
-
+    //form validation
     const validateInput = e => {
         let { name, value } = e.target;
         setError(prev => {
@@ -95,23 +100,7 @@ function AdminProfile() {
                 break;
 
             
-            case "password":
-              if (!value) {
-                stateObj[name] = "Please enter Password.";
-              } else if (admin.confirmPassword && value !== admin.confirmPassword) {
-                stateObj["confirmPassword"] = "Password and Confirm Password does not match.";
-              } else {
-                stateObj["confirmPassword"] = admin.confirmPassword ? "" : admin.confirmPassword;
-              }
-              break;
-     
-            case "confirmPassword":
-              if (!value) {
-                stateObj[name] = "Please enter Confirm Password.";
-              } else if (admin.password && value !== admin.password) {
-                stateObj[name] = "Password and Confirm Password does not match.";
-              }
-              break;
+            
      
             default:
               break;
@@ -131,6 +120,7 @@ function AdminProfile() {
         document.getElementById("ReadOnly").className = "container PageContainer";
         document.getElementById("ReadWrite").className = "container PageContainer ShowHideContainer";
     }
+    //this method will trigger on form submit
     const FormHandle = e => {
         e.preventDefault();
         console.log(JSON.stringify(admin),JSON.stringify(updatedAdmin));
@@ -139,31 +129,41 @@ function AdminProfile() {
         
         
     }
+    //post api call to save updated Admin profile details
     const addDataToServer = (data) => {
         let user=JSON.parse(localStorage.getItem("loggedinuser"));
         axios.post(`http://localhost:8080/updateAdmin/${user.user_id}`, data).then(
             (response) => {
                 console.log(response);
                 alert("Profile Updated successfully!");
+                setAdmin({...admin,user_id2: response.data.user_id2,
+                    admin_id: response.data.admin_id,
+                    name: response.data.name,
+                    mobile_no: response.data.mobile_no,
+                    address:  response.data.address,
+                    city: response.data.city,
+                    email: response.data.email,
+                    state: response.data.state })
+                ShowReadOnly();
                 //navigate("/Login");
                 
             }, (error) => {
                 console.log(error);
                 alert("error while updating profile. Please try again.");
-                navigate("/AdminProfile");
+                //navigate("/AdminProfile");
             }
         );
     }
-
+    // api call to fetch admin profile derails.
     const getDataFromServer = ( ) => {
         let user=JSON.parse(localStorage.getItem("loggedinuser"));
-        axios.get(`http://localhost:8080/getAdmin/${user.user_id}`).then(
+        axios.get(`http://localhost:8080/getAdmin/${user?.user_id}`).then(
             (response) => {
                 console.log(response);
                 
                 setAdmin({...admin,  
-                            //user_id2: response.data.user_id2,
-                            //admin_id: response.data.admin_id,
+                            user_id2: response.data.user_id2,
+                            admin_id: response.data.admin_id,
                             name: response.data.name,
                             mobile_no: response.data.mobile_no,
                             address:  response.data.address,
@@ -177,7 +177,17 @@ function AdminProfile() {
              }
          );
     }
-
+    //react hook to handle component side effect. checking the user authorization before component load and only then showing content.
+    useEffect(()=>{
+        let user=JSON.parse(localStorage.getItem("loggedinuser"));
+        if(user && user.user_id){
+            toggleHide(false);
+            getDataFromServer();
+        }else{
+            showSnackBar();
+            setTimeout(()=>{navigate("/");},3000);  
+        }
+    },[]);
     return(
         <div>
             <div className="w3-black">
@@ -316,7 +326,7 @@ function AdminProfile() {
                                         <label className="display-6 text-center" for="email">Email : </label>
                                     </div>
                                     <div className="col-75">
-                                        <input className="display-6" type="email" name="email"  placeholder="abc@gmail.com" value={email} onChange={(e) => onInputChange(e)} onBlur={validateInput} />
+                                        <input className="display-6" type="email" name="email"  placeholder="abc@gmail.com" value={email} onChange={(e) => onInputChange(e)} onBlur={validateInput} disabled/>
                                         {error.email && <span className='err'>{error.email}</span>}
                                     </div>
                                     </div>

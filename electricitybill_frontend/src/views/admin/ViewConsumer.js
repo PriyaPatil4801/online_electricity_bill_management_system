@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import image from '../images/logo.gif';
@@ -8,6 +8,8 @@ import image from '../images/logo.gif';
 function ViewConsumer() {
     // let w=200;
     // let h=200;
+    const [hide, toggleHide]=useState(true);
+    const [zones, setZones]=useState([]);
     const [consumers,setConsumers] =useState([]);
     let navigate=useNavigate();
     const [zone, setZone] = useState({
@@ -29,7 +31,13 @@ function ViewConsumer() {
     // }
     const handleLogOut = e => {
         e.preventDefault();
+        localStorage.clear();
         navigate("/");
+    }
+    const showSnackBar = () =>{
+        var x = document.getElementById("snackbar");
+        x.className = "show";
+        setTimeout(()=>{ x.className = x.className.replace("show", ""); }, 3000);
     }
     const FormHandle = e => {
         e.preventDefault();
@@ -51,6 +59,21 @@ function ViewConsumer() {
             }
         );
     }
+    const getAvailableZones = () => {
+        axios.get("http://localhost:8080/getAvailableZones/").then(
+            (response) => {
+                console.log(response);
+                setZones( response.data);
+                //consumers = JSON.parse(response);
+                //alert("Added Successfully");
+                
+            }, (error) => {
+                console.log(error);
+                alert("Something went wrong while fetching zones. Please try again after sometime.");
+            }
+        );
+    }
+    //form validation
     const validateInput = e => {
         let { name, value } = e.target;
         let isValid = true;
@@ -72,6 +95,18 @@ function ViewConsumer() {
             return stateObj;
         });
     }
+    //react hook to handle component side effect. checking the user authorization before component load and only then showing content.
+    useEffect(()=>{
+        let user=JSON.parse(localStorage.getItem("loggedinuser"));
+        if(user && user.user_id){
+            toggleHide(false);
+            getAvailableZones();
+        }else{
+            showSnackBar();
+            setTimeout(()=>{navigate("/");},3000);  
+        }
+        
+    },[]);
     return(
         <div>
         <div className="w3-black">
@@ -117,7 +152,7 @@ function ViewConsumer() {
             </div>
         </div>
         <div className='PageContent'>
-            <div className='ViewConsumer'>
+            <div className='ViewConsumer' hidden={hide}>
                 <div className='row'>
                     <div className="col-12 col-lg-10 col-xl-10 offset-xl-1 top-padding">
                         
@@ -130,10 +165,15 @@ function ViewConsumer() {
                                     <div className="col-75">
                                         <select  className="display-6" aria-label=".form-select-lg example" name="zone_id" value={zone_id} onChange={(e) => onInputChange(e)} onBlur={validateInput} >
                                             <option value="0">Open this select menu</option>
-                                            <option value="1">Katraj</option>
+                                            {zones.map((val,key) => {
+                                                    return (
+                                                        <option value={val.zone_id}>{val.zone_name}</option>
+                                                    )
+                                            })}
+                                            {/* <option value="1">Katraj</option>
                                             <option value="2">Kothrud</option>
                                             <option value="3">Hadapsar</option>
-                                            <option value="4">Nigdi</option>
+                                            <option value="4">Nigdi</option> */}
                                         </select>
                                         {error.zone_id && <span className='err'>{error.zone_id}</span>}
                                     </div>
@@ -144,40 +184,43 @@ function ViewConsumer() {
                                 </div>
                             </form>
                             <div className="row">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Consumer ID</th>
-                                            <th>Name</th>
-                                            <th>Email ID</th>
-                                            <th>Mobile No.</th>
-                                            <th>Address</th>
-                                            <th>City</th>
-                                            <th>State</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {consumers.map((val,key) => {
-                                        return (
-                                            <tr key={key}>
-                                                <td>{val.consumer_id}</td>
-                                                <td>{val.name}</td>
-                                                <td>{val.email}</td>
-                                                <td>{val.mobile_no}</td>
-                                                <td>{val.address}</td>
-                                                <td>{val.city}</td>
-                                                <td>{val.state}</td>
+                                <div className="col-12 col-lg-10 col-xl-10 offset-xl-1 top-padding">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Consumer ID</th>
+                                                <th>Name</th>
+                                                <th>Email ID</th>
+                                                <th>Mobile No.</th>
+                                                <th>Address</th>
+                                                <th>City</th>
+                                                <th>State</th>
                                             </tr>
-                                        )
-                                        })}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            {consumers.map((val,key) => {
+                                            return (
+                                                <tr key={key}>
+                                                    <td>{val.consumer_id}</td>
+                                                    <td>{val.name}</td>
+                                                    <td>{val.email}</td>
+                                                    <td>{val.mobile_no}</td>
+                                                    <td>{val.address}</td>
+                                                    <td>{val.city}</td>
+                                                    <td>{val.state}</td>
+                                                </tr>
+                                            )
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                             
                     </div>
                 </div>
             </div>
+            <div id="snackbar">You are not logged in! Redirecting to login page!!</div>
         </div>
     </div>
     )

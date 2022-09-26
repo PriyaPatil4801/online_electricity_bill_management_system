@@ -8,28 +8,29 @@ import image from '../images/logo.gif';
 function SubAdminProfile() {
     let firstentry=true;
     let navigate=useNavigate();
-    useEffect(()=>{
-        getDataFromServer();
-    },[]);
-    const [admin, setAdmin] = useState({  
-       // user_id2: '',
-        //admin_id: '',
+    const [hide, toggleHide]=useState(true);
+    
+    const [subAdmin, setSubAdmin] = useState({  
+        user_id1: '',
+        subadmin_id: '',
         name:'',
         mobile_no:'',
         address: '',
         city:'',
         email: '',
-        state:''
+        state:'',
+        zone:''
     });
-    const [updatedAdmin, setUpdatedAdmin] = useState({  
-      //  user_id2: '',
-      //  admin_id: '',
+    const [updatedSubAdmin, setUpdatedSubAdmin] = useState({  
+        user_id1: '',
+        subadmin_id: '',
         name:'',
         mobile_no:'',
         address: '',
         city:'',
         email: '',
-        state:''
+        state:'',
+        zone:''
     });
     const [error, setError] = useState({
         name: '',
@@ -39,15 +40,16 @@ function SubAdminProfile() {
         email: '',
         state:''
       });
-    const {name, mobile_no, address, city, email, state} = updatedAdmin;
+    const {name, mobile_no, address, city, email, state, zone} = updatedSubAdmin;
     const handleLogOut = e => {
         e.preventDefault();
+        localStorage.clear();
         navigate("/");
     }
 
     
     const onInputChange = e => {
-        setUpdatedAdmin({ ...updatedAdmin, [e.target.name]: e.target.value })
+        setUpdatedSubAdmin({ ...updatedSubAdmin, [e.target.name]: e.target.value })
     }
 
     const validateInput = e => {
@@ -98,17 +100,17 @@ function SubAdminProfile() {
             case "password":
               if (!value) {
                 stateObj[name] = "Please enter Password.";
-              } else if (admin.confirmPassword && value !== admin.confirmPassword) {
+              } else if (subAdmin.confirmPassword && value !== subAdmin.confirmPassword) {
                 stateObj["confirmPassword"] = "Password and Confirm Password does not match.";
               } else {
-                stateObj["confirmPassword"] = admin.confirmPassword ? "" : admin.confirmPassword;
+                stateObj["confirmPassword"] = subAdmin.confirmPassword ? "" : subAdmin.confirmPassword;
               }
               break;
      
             case "confirmPassword":
               if (!value) {
                 stateObj[name] = "Please enter Confirm Password.";
-              } else if (admin.password && value !== admin.password) {
+              } else if (subAdmin.password && value !== subAdmin.password) {
                 stateObj[name] = "Password and Confirm Password does not match.";
               }
               break;
@@ -122,70 +124,90 @@ function SubAdminProfile() {
     }
     
     const OpenInEditMode = () =>{
-        setUpdatedAdmin({...admin});
+        setUpdatedSubAdmin({...subAdmin});
         document.getElementById("ReadOnly").className = "container PageContainer ShowHideContainer";
         document.getElementById("ReadWrite").className = "container PageContainer";
     }
     const ShowReadOnly = () =>{
-        setUpdatedAdmin({...admin});
+        setUpdatedSubAdmin({...subAdmin});
         document.getElementById("ReadOnly").className = "container PageContainer";
         document.getElementById("ReadWrite").className = "container PageContainer ShowHideContainer";
     }
     const FormHandle = e => {
         e.preventDefault();
-        console.log(JSON.stringify(admin),JSON.stringify(updatedAdmin));
+        console.log(JSON.stringify(subAdmin),JSON.stringify(updatedSubAdmin));
         
-        addDataToServer(updatedAdmin);
+        addDataToServer(updatedSubAdmin);
         
         
     }
     const addDataToServer = (data) => {
-        axios.post("http://localhost:8080/updateAdmin/"+localStorage.getItem("loggedinuser").user_id, data).then(
+        let user=JSON.parse(localStorage.getItem("loggedinuser"));
+        axios.post(`http://localhost:8080/updateSubadmin/${user?.user_id}`, data).then(
             (response) => {
                 console.log(response);
                 alert("Profile Updated successfully!");
+                setSubAdmin({...subAdmin, user_id1: response.data.user_id1,
+                    subadmin_id: response.data.subadmin_id,
+                    name: response.data.name,
+                    mobile_no: response.data.mobile_no,
+                    address:  response.data.address,
+                    city: response.data.city,
+                    email: response.data.email,
+                    state: response.data.state,
+                    zone:response.data.zone });
+                ShowReadOnly();
                 //navigate("/Login");
                 
             }, (error) => {
                 console.log(error);
                 alert("error while updating profile. Please try again.");
-                navigate("/AdminProfile");
+                ShowReadOnly();
+                //navigate("/SubAdminProfile");
             }
         );
     }
 
     const getDataFromServer = ( ) => {
-        setAdmin({...admin,  
-                                //user_id2: response.data.user_id2,
-                                //admin_id: response.data.admin_id,
-                                name: "Priya",
-                                mobile_no: "1234567890",
-                                address:  "Pune",
-                                city: "Karad",
-                                email: "abc@gmail.com",
-                                state: "MH"});
-                                firstentry=false;
-        // axios.get("http://localhost:8080/getAdmin/"+localStorage.getItem("loggedinuser").user_id).then(
-        //     (response) => {
-        //         console.log(response);
+  
+        let user=JSON.parse(localStorage.getItem("loggedinuser"));
+        axios.get(`http://localhost:8080/getSubAdmin/${user?.user_id}`).then(
+            (response) => {
+                console.log(response);
                 
-        //         setAdmin({...admin,  
-        //                     //user_id2: response.data.user_id2,
-        //                     //admin_id: response.data.admin_id,
-        //                     name: response.data.name,
-        //                     mobile_no: response.data.mobile_no,
-        //                     address:  response.data.address,
-        //                     city: response.data.city,
-        //                     email: response.data.email,
-        //                     state: response.data.state });
+                setSubAdmin({...subAdmin,  
+                            user_id1: response.data.user_id1,
+                            subadmin_id: response.data.subadmin_id,
+                            name: response.data.name,
+                            mobile_no: response.data.mobile_no,
+                            address:  response.data.address,
+                            city: response.data.city,
+                            email: response.data.email,
+                            state: response.data.state,
+                            zone:response.data.zone });
                 
-        //     }, (error) => {
-        //         console.log(error);
-        //         alert("Something went wrong while fetching Admin user data.");
-        //     }
-        // );
+            }, (error) => {
+                console.log(error);
+                alert("Something went wrong while fetching Sub Admin user data.");
+            }
+        );
     }
-
+    const showSnackBar = () =>{
+        var x = document.getElementById("snackbar");
+        x.className = "show";
+        setTimeout(()=>{ x.className = x.className.replace("show", ""); }, 3000);
+    }
+    //react hook to handle component side effect. checking the user authorization before component load and only then showing content.
+    useEffect(()=>{
+        let user=JSON.parse(localStorage.getItem("loggedinuser"));
+        if(user && user.user_id){
+            toggleHide(false);
+            getDataFromServer();
+        }else{
+            showSnackBar();
+            setTimeout(()=>{navigate("/");},3000);  
+        }
+    },[]);
     return(
         <div>
            <div className="w3-black">
@@ -231,7 +253,7 @@ function SubAdminProfile() {
             </div>
         </div>
             <div className='PageContent'>
-                <div className='AdminProfile'>
+                <div className='AdminProfile' hidden={hide}>
                     <div className='row'>
                         <div className="col-12 col-lg-10 col-xl-10 offset-xl-1 top-padding">
                             <div className="container PageContainer" id="ReadOnly">
@@ -244,7 +266,7 @@ function SubAdminProfile() {
                                         <label  className="display-6 text-center" for="name">Name : </label>
                                     </div>
                                     <div className="col-75">
-                                        <label className="display-6 text-center">{admin.name}</label>
+                                        <label className="display-6 text-center">{subAdmin.name}</label>
                                     </div>
                                     </div>
                                     <div className="row">
@@ -252,7 +274,7 @@ function SubAdminProfile() {
                                         <label  className="display-6 text-center" for="mobile_no">Mobile No : </label>
                                     </div>
                                     <div className="col-75">
-                                        <label className="display-6 text-center">{admin.mobile_no}</label>
+                                        <label className="display-6 text-center">{subAdmin.mobile_no}</label>
                                     </div>
                                     </div>
                                     <div className="row">
@@ -260,7 +282,7 @@ function SubAdminProfile() {
                                         <label className="display-6 text-center" for="email">Email : </label>
                                     </div>
                                     <div className="col-75">
-                                        <label className="display-6 text-center">{admin.email}</label>
+                                        <label className="display-6 text-center">{subAdmin.email}</label>
                                     </div>
                                     </div>
                                     <div className="row">
@@ -268,7 +290,7 @@ function SubAdminProfile() {
                                         <label className="display-6 text-center" >Address : </label>
                                     </div>
                                     <div className="col-75">
-                                        <label className="display-6 text-center" >{admin.address}</label>
+                                        <label className="display-6 text-center" >{subAdmin.address}</label>
                                     </div>
                                     </div>
                                     <div className="row">
@@ -276,7 +298,7 @@ function SubAdminProfile() {
                                         <label className="display-6 text-center">City : </label>
                                     </div>
                                     <div className="col-75">
-                                        <label className="display-6 text-center" >{admin.city}</label>
+                                        <label className="display-6 text-center" >{subAdmin.city}</label>
                                     </div>
                                     </div>
                                     <div className="row">
@@ -284,10 +306,17 @@ function SubAdminProfile() {
                                         <label className="display-6 text-center" >State : </label>
                                     </div>
                                     <div className="col-75">
-                                        <label className="display-6 text-center">{admin.state}</label>
+                                        <label className="display-6 text-center">{subAdmin.state}</label>
                                     </div>
                                     </div>
-                                    
+                                    <div className="row">
+                                    <div className="col-25">
+                                        <label className="display-6 text-center" >Zone : </label>
+                                    </div>
+                                    <div className="col-75">
+                                        <label className="display-6 text-center">{subAdmin.zone.zone_name}</label>
+                                    </div>
+                                    </div>
                                     
                                     <div className="row">
                                         <div className="col-50">
@@ -298,7 +327,7 @@ function SubAdminProfile() {
                             </div>
                             <div className="container PageContainer ShowHideContainer" id="ReadWrite">
                                 <div className="row">
-                                    <label className="display-4 text-center">Admin Profile</label>
+                                    <label className="display-4 text-center">Sub Admin Profile</label>
                                 </div>
                                 <form onSubmit={e => FormHandle(e)} id="contact-form">
                                     <div className="row">
@@ -324,7 +353,7 @@ function SubAdminProfile() {
                                         <label className="display-6 text-center" for="email">Email : </label>
                                     </div>
                                     <div className="col-75">
-                                        <input className="display-6" type="email" name="email"  placeholder="abc@gmail.com" value={email} onChange={(e) => onInputChange(e)} onBlur={validateInput} />
+                                        <input className="display-6" type="email" name="email"  placeholder="abc@gmail.com" value={email} onChange={(e) => onInputChange(e)} onBlur={validateInput} disabled/>
                                         {error.email && <span className='err'>{error.email}</span>}
                                     </div>
                                     </div>
@@ -356,6 +385,14 @@ function SubAdminProfile() {
                                     </div>
                                     </div>
                                     <div className="row">
+                                    <div className="col-25">
+                                        <label className="display-6 text-center" >Zone : </label>
+                                    </div>
+                                    <div className="col-75">
+                                        <input className="display-6" type="text" name="zone"  value={zone.zone_name} disabled />
+                                    </div>
+                                    </div>
+                                    <div className="row">
                                         <div className="col-50">
                                             <button  type="submit" className="loginButton buttondecoration">Update </button>
                                         </div>
@@ -370,6 +407,7 @@ function SubAdminProfile() {
                         </div>
                     </div>
                 </div>
+                <div id="snackbar">You are not logged in! Redirecting to login page!!</div>
             </div>
         </div>
     )

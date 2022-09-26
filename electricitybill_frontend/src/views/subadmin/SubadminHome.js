@@ -1,16 +1,69 @@
 import { render } from "@testing-library/react";
-
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import image from '../images/logo.gif';
 
 
 function SubAdminHome() {
     let navigate=useNavigate();
-
+    const [hide, toggleHide]=useState(true);
+    const [subAdmin, setSubAdmin] = useState({  
+        user_id1: '',
+        subadmin_id: '',
+        name:'',
+        mobile_no:'',
+        address: '',
+        city:'',
+        email: '',
+        state:'',
+        zone_id1:''
+    });
     const handleLogOut = e => {
         e.preventDefault();
+        localStorage.clear();
         navigate("/");
     }
+    const getDataFromServer = ( ) => {
+        let user=JSON.parse(localStorage.getItem("loggedinuser"));
+        axios.get(`http://localhost:8080/getSubAdmin/${user?.user_id}`).then(
+            (response) => {
+                console.log(response);
+                
+                setSubAdmin({...subAdmin,  
+                            user_id1: response.data.user_id1,
+                            admin_id: response.data.admin_id,
+                            name: response.data.name,
+                            mobile_no: response.data.mobile_no,
+                            address:  response.data.address,
+                            city: response.data.city,
+                            email: response.data.email,
+                            state: response.data.state,
+                            zone_id1: response.data.zone_id1 });
+                localStorage.setItem("subAdminID",JSON.stringify(response.data.consumer_id));
+            }, (error) => {
+                console.log(error);
+               alert("Something went wrong while fetching Admin user data.");
+             }
+         );
+    }
+    const showSnackBar = () =>{
+        var x = document.getElementById("snackbar");
+        x.className = "show";
+        setTimeout(()=>{ x.className = x.className.replace("show", ""); }, 3000);
+    }
+    //react hook to handle component side effect. checking the user authorization before component load and only then showing content.
+    useEffect(()=>{
+        let user=JSON.parse(localStorage.getItem("loggedinuser"));
+        if(user && user.user_id){
+            toggleHide(false);
+            getDataFromServer();
+        }else{
+            showSnackBar();
+            setTimeout(()=>{navigate("/");},3000);  
+        }
+        
+    },[]);
     return(
         <div>
              <div className="w3-black">
@@ -56,7 +109,20 @@ function SubAdminHome() {
             </div>
         </div>
             <div className='PageContent'>
-
+                <div hidden={hide}>
+                    <div className='row'>
+                        <div className="col-12 col-lg-12 col-xl-12">
+                            <div class="jumbotron">
+                                <div class="container">
+                                    <h1 class="display-3">Hello, {subAdmin.name}!</h1>
+                                    <p>Welcome to <b>Online Electricity Bill Management System</b>! Your one stop solution to manage your home eletricity bills.  </p>
+                                    <p><a class="btn btn-primary btn-lg" href="/SubAdminGenerateBills" role="button">Generate Bills »</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="snackbar">You are not logged in! Redirecting to login page!!</div>
             </div>
         </div>
     )

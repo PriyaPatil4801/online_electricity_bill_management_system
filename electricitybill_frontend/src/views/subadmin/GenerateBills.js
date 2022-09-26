@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import image from '../images/logo.gif';
@@ -8,8 +8,9 @@ import image from '../images/logo.gif';
 function SubAdminGenerateBills() {
     let w=200;
     let h=200;
-    let consumersList =[{consumer_id:'1', name:"shubham patil"},
-    {consumer_id:'2', name:"priya patil"}];
+    const [hide, toggleHide]=useState(true);
+    const [zones,setZones] =useState([]);
+    const [consumers,setConsumers] =useState([]);
     let navigate=useNavigate();
     const [pendingBill, setPendingBill] = useState({
         bill_id:'',
@@ -67,6 +68,7 @@ function SubAdminGenerateBills() {
     // }
     const handleLogOut = e => {
         e.preventDefault();
+        localStorage.clear();
         navigate("/");
     }
     const FormHandle = e => {
@@ -79,7 +81,7 @@ function SubAdminGenerateBills() {
         axios.get("http://localhost:8080/getConsumersByZone/"+data.zone_id).then(
             (response) => {
                 console.log(response);
-                consumersList = JSON.parse(response);
+                setConsumers( response.data);
                 //alert("Added Successfully");
                 
             }, (error) => {
@@ -91,9 +93,11 @@ function SubAdminGenerateBills() {
     const generatebillform= e =>{
         console.log(e.target.id);
         let id = e.target.id;
+        let consumerID=parseInt(consumers[id].consumer_id);
+        fetchPendingBill(consumerID);
         setBillForm({
-            consumer_id: consumersList[id].consumer_id,
-            name: consumersList[id].name,
+            consumer_id: consumers[id].consumer_id,
+            name: consumers[id].name,
             units: 0,
             current_billAmt:0,
             dues:0,
@@ -109,67 +113,85 @@ function SubAdminGenerateBills() {
         console.log(billform);
         let units = parseInt(billform.units);
         //fetchPendingBill();
-        let bill,tax,dues,fine,totalBill;
-        if(pendingBill.bill_id ==='' && units > 0){
-            if(units<=100){
-                bill=units*3;
-                dues=0;
-                fine=0;
-                tax=bill*0.05;
-                totalBill=bill+tax;
-            }else if(units>100 && units<=300){
-                bill=(100*3)+(units-100)*7;
-                dues=0;
-                fine=0;
-                tax=bill*0.05;
-                totalBill=bill+tax;
-            }else if(units>300){
-                bill=(100*3)+(200*7)+(units-300)*11;
-                dues=0;
-                fine=0;
-                tax=parseFloat((bill*0.05).toFixed(2));
-                totalBill=bill+tax;
+        setTimeout(()=>{
+            let bill,tax,dues,fine,totalBill;
+            console.log(pendingBill.bill_id);
+            if(pendingBill.bill_id ==='' && units > 0){
+                console.log("inside0");
+                if(units<=100){
+                    bill=units*3;
+                    dues=0;
+                    fine=0;
+                    tax=bill*0.05;
+                    totalBill=bill+tax;
+                }else if(units>100 && units<=300){
+                    bill=(100*3)+(units-100)*7;
+                    dues=0;
+                    fine=0;
+                    tax=bill*0.05;
+                    totalBill=bill+tax;
+                }else if(units>300){
+                    bill=(100*3)+(200*7)+(units-300)*11;
+                    dues=0;
+                    fine=0;
+                    tax=parseFloat((bill*0.05).toFixed(2));
+                    totalBill=bill+tax;
+                }
+            }else{
+                if(units<=100){
+                    bill=units*3;
+                    dues=pendingBill.total_billAmt;
+                    fine=50;
+                    tax=bill*0.05;
+                    totalBill=bill+dues+fine+tax;
+                }else if(units>100 && units<=300){
+                    bill=(100*3)+(units-100)*7;
+                    dues=pendingBill.total_billAmt;
+                    fine=50;
+                    tax=bill*0.05;
+                    totalBill=bill+dues+fine+tax;
+                }else if(units>300){
+                    bill=(100*3)+(200*7)+(units-300)*11;
+                    dues=pendingBill.total_billAmt;
+                    fine=50;
+                    tax=bill*0.05;
+                    totalBill=bill+dues+fine+tax;
+                }
             }
-        }else{
-            if(units<=100){
-                bill=units*3;
-                dues=pendingBill.total_billAmt;
-                fine=50;
-                tax=bill*0.05;
-                totalBill=bill+dues+fine+tax;
-            }else if(units>100 && units<=300){
-                bill=(100*3)+(units-100)*7;
-                dues=pendingBill.total_billAmt;
-                fine=50;
-                tax=bill*0.05;
-                totalBill=bill+dues+fine+tax;
-            }else if(units>300){
-                bill=(100*3)+(200*7)+(units-300)*11;
-                dues=pendingBill.total_billAmt;
-                fine=50;
-                tax=bill*0.05;
-                totalBill=bill+dues+fine+tax;
-            }
-        }
-        setBillForm({...billform, 
-            current_billAmt:bill,
-            tax:tax,
-            dues:dues,
-            fine:fine,
-            total_billAmt:totalBill,
-            status:"Pending"
-        });
+            setBillForm({...billform, 
+                current_billAmt:bill,
+                tax:tax,
+                dues:dues,
+                fine:fine,
+                total_billAmt:totalBill,
+                status:"Pending"
+            });
+        },1);
 
     }
-    const fetchPendingBill = () =>{
-        let id = parseInt(billform.consumer_id);
-        axios.get(`http://localhost:8080/fetchPendingBill/${id}`).then(
+    const fetchPendingBill = (consumerid) =>{
+        axios.get(`http://localhost:8080/fetchPendingBill/${consumerid}`).then(
             (response) => {
                 console.log(response);
-                let fetchedPendingBill = JSON.parse(response);
-                setPendingBill({...pendingBill,...fetchedPendingBill});
-                //alert("Added Successfully");
+                //let fetchedPendingBill = JSON.parse(response.data);
+                if(response.data!=""){
+                    setPendingBill({ ...pendingBill,
+                        bill_id:response.data.bill_id,
+                        consumer_id:response.data.consumer.consumer_id,
+                        name:response.data.consumer.name,
+                        units:response.data.units,
+                        current_billAmt:response.data.current_billAmt,
+                        dues:response.data.dues,
+                        fine:response.data.fine,
+                        total_billAmt:response.data.total_billAmt,
+                        tax:response.data.tax,
+                        bill_date:response.data.bill_date,
+                        due_date:response.data.due_date,
+                        status:response.data.status});
+                }
                 
+                //alert("Added Successfully");
+                console.log(JSON.stringify(pendingBill));
             }, (error) => {
                 console.log(error);
                 alert("Something went wrong while fetching consumers. Please try again after sometime.");
@@ -180,42 +202,71 @@ function SubAdminGenerateBills() {
         e.preventDefault();
         console.log(JSON.stringify(billform));
         let billId=parseInt(pendingBill.bill_id);
-        setPendingBill({...pendingBill,
-            status:"Carry Forward"
-        })
-        axios.post(`http://localhost:8080/carryforwardPendingBill/${billId}`, pendingBill).then(
-            (response) => {
-                console.log(response);
-                axios.post(`http://localhost:8080/addNewBill`, billform).then(
-                    (response) => {
-                        console.log(response);
-                        alert("Bill Added Successfully!!");
-                        setBillForm({
-                            consumer_id:'',
-                            name:'',
-                            units:0,
-                            current_billAmt:0,
-                            dues:0,
-                            fine:0,
-                            total_billAmt:0,
-                            tax:0,
-                            bill_date:'',
-                            due_date:'',
-                            status:''
-                        });
-                        //alert("Added Successfully");
-                        
-                    }, (error) => {
-                        console.log(error);
-                        alert("Something went wrong while generating bill. Please try again after sometime.");
-                    }
-                );
-                
-            }, (error) => {
-                console.log(error);
-                alert("Something went wrong while generating bill. Please try again after sometime.");
-            }
-        );
+        if(billId){
+            setPendingBill({...pendingBill,
+                status:"Carry Forward"
+            });
+            //first carry forward previous month pending bill
+            axios.post(`http://localhost:8080/carryforwardPendingBill/${billId}`, pendingBill).then(
+                (response) => {
+                    console.log(response);
+                    //then create new bill for the current bill.
+                    axios.post(`http://localhost:8080/addNewBill`, billform).then(
+                        (response) => {
+                            console.log(response);
+                            alert("Bill Added Successfully!!");
+                            setBillForm({
+                                consumer_id:'',
+                                name:'',
+                                units:0,
+                                current_billAmt:0,
+                                dues:0,
+                                fine:0,
+                                total_billAmt:0,
+                                tax:0,
+                                bill_date:'',
+                                due_date:'',
+                                status:''
+                            });
+                            //alert("Added Successfully");
+                            
+                        }, (error) => {
+                            console.log(error);
+                            alert("Something went wrong while generating bill. Please try again after sometime.");
+                        }
+                    );
+                    
+                }, (error) => {
+                    console.log(error);
+                    alert("Something went wrong while generating bill. Please try again after sometime.");
+                }
+            );
+        }else{
+            axios.post(`http://localhost:8080/addNewBill`, billform).then(
+                        (response) => {
+                            console.log(response);
+                            alert("Bill Added Successfully!!");
+                            setBillForm({
+                                consumer_id:'',
+                                name:'',
+                                units:0,
+                                current_billAmt:0,
+                                dues:0,
+                                fine:0,
+                                total_billAmt:0,
+                                tax:0,
+                                bill_date:'',
+                                due_date:'',
+                                status:''
+                            });
+                            //alert("Added Successfully");
+                            
+                        }, (error) => {
+                            console.log(error);
+                            alert("Something went wrong while generating bill. Please try again after sometime.");
+                        }
+                    );
+        }
         
     }
     const validateInput = e => {
@@ -239,6 +290,37 @@ function SubAdminGenerateBills() {
             return stateObj;
         });
     }
+    const showSnackBar = () =>{
+        var x = document.getElementById("snackbar");
+        x.className = "show";
+        setTimeout(()=>{ x.className = x.className.replace("show", ""); }, 3000);
+    }
+    const getAvailableZones = () => {
+        axios.get("http://localhost:8080/getAvailableZones/").then(
+            (response) => {
+                console.log(response);
+                setZones( response.data);
+                //consumers = JSON.parse(response);
+                //alert("Added Successfully");
+                
+            }, (error) => {
+                console.log(error);
+                alert("Something went wrong while fetching zones. Please try again after sometime.");
+            }
+        );
+    }
+    //react hook to handle component side effect. checking the user authorization before component load and only then showing content.
+    useEffect(()=>{
+        let user=JSON.parse(localStorage.getItem("loggedinuser"));
+        if(user && user.user_id){
+            toggleHide(false);
+            getAvailableZones();
+        }else{
+            showSnackBar();
+            setTimeout(()=>{navigate("/");},3000);  
+        }
+        
+    },[]);
     return(
         <div>
         <div className="w3-black">
@@ -284,7 +366,7 @@ function SubAdminGenerateBills() {
             </div>
         </div>
         <div className='PageContent'>
-            <div className='ViewConsumer'>
+            <div className='ViewConsumer' hidden={hide}>
                 <div className='row'>
                     <div className="col-12 col-lg-10 col-xl-10 offset-xl-1 top-padding">
                         
@@ -297,10 +379,15 @@ function SubAdminGenerateBills() {
                                     <div className="col-75">
                                         <select  className="display-6" aria-label=".form-select-lg example" name="zone_id" value={zone_id} onChange={(e) => onInputChange(e)} onBlur={validateInput} >
                                             <option value="0">Open this select menu</option>
-                                            <option value="1">Katraj</option>
+                                            {zones.map((val,key) => {
+                                                    return (
+                                                        <option value={val.zone_id}>{val.zone_name}</option>
+                                                    )
+                                            })}
+                                            {/* <option value="1">Katraj</option>
                                             <option value="2">Kothrud</option>
                                             <option value="3">Hadapsar</option>
-                                            <option value="4">Nigdi</option>
+                                            <option value="4">Nigdi</option> */}
                                         </select>
                                         {error.zone_id && <span className='err'>{error.zone_id}</span>}
                                     </div>
@@ -326,7 +413,7 @@ function SubAdminGenerateBills() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {consumersList.map((val, key) => {
+                                            {consumers.map((val, key) => {
                                             return (
                                                 <tr key={key}>
                                                     <td>{val.consumer_id}</td>
@@ -440,6 +527,7 @@ function SubAdminGenerateBills() {
                     </div>
                 </div>
             </div>
+            <div id="snackbar">You are not logged in! Redirecting to login page!!</div>
         </div>
     </div>
     )
