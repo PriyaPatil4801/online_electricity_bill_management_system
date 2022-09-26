@@ -8,15 +8,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.app.entities.Subadmin;
+import com.app.entities.Payment;
 
 @Transactional
 @Repository
-public interface SubadminRepository extends JpaRepository<Subadmin, Integer> {
+public interface PaymentRepository extends JpaRepository<Payment, Integer>{
 
-	@Query("select c from Subadmin c where zone_id1=:z")
-	public List<Subadmin> getbyZone(@Param("z") int zone_id);
-	
-	@Query("Select a from Subadmin a where user_id1=:i")
-	public Subadmin getSubadminbyuserid(@Param("i") int user_id);
+	@Query("select p from Payment p where consumer_id=:c")
+	public List<Payment> getPayment(@Param("c") int consumer_id);
 }

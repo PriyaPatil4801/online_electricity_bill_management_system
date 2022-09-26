@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -16,7 +15,7 @@ public class Zone {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int zone_id;
 	
-	@Column
+	@Column(length = 15,nullable = false)
 	private String zone_name;
 
 	public Zone() {

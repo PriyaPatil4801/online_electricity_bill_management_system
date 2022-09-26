@@ -24,24 +24,24 @@ public class Consumer {
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="user_id",referencedColumnName="user_id")
-	private User user_id;
+	private User user;
 	
-	@Column
+	@Column(length = 40,nullable = false)
 	private String name;
 	
-	@Column
+	@Column(length = 10,nullable = false)
 	private String mobile_no;
 	
-	@Column
+	@Column(length = 100,nullable = false)
 	private String address;
 	
-	@Column
+	@Column(length = 20,nullable = false)
 	private String city;
 	
-	@Column
+	@Column(length = 40, unique = true)
 	private String email;
 	
-	@Column
+	@Column(length = 30,nullable = false)
 	private String state;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -54,10 +54,10 @@ public class Consumer {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Consumer(User user_id, String name, String mobile_no, String address, String city, String email,
+	public Consumer(User user, String name, String mobile_no, String address, String city, String email,
 			String state, Zone zone) {
 		super();
-		this.user_id = user_id;
+		this.user = user;
 		this.name = name;
 		this.mobile_no = mobile_no;
 		this.address = address;
@@ -76,12 +76,12 @@ public class Consumer {
 		this.consumer_id = consumer_id;
 	}
 
-	public User getUser_id() {
-		return user_id;
+	public User getUser() {
+		return user;
 	}
 
-	public void setUser_id(User user_id) {
-		this.user_id = user_id;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public String getName() {
@@ -142,7 +142,7 @@ public class Consumer {
 
 	@Override
 	public String toString() {
-		return "Consumer [consumer_id=" + consumer_id + ", user_id=" + user_id + ", name=" + name + ", mobile_no="
+		return "Consumer [consumer_id=" + consumer_id + ", user=" + user + ", name=" + name + ", mobile_no="
 				+ mobile_no + ", address=" + address + ", city=" + city + ", email=" + email + ", state=" + state
 				+ ", zone=" + zone + "]";
 	}

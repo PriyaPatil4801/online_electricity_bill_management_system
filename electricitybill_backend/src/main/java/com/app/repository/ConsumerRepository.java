@@ -16,4 +16,7 @@ public interface ConsumerRepository extends JpaRepository<Consumer, Integer> {
 
 	@Query("select c from Consumer c where zone_id=:z")
 	public List<Consumer> getbyZone(@Param("z") int zone_id);
+	
+	@Query("Select a from Consumer a where user_id=:i")
+	public Consumer getConsumerbyuserid(@Param("i") int user_id);
 }

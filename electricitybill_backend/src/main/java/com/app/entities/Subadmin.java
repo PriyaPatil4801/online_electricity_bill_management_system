@@ -24,24 +24,24 @@ public class Subadmin {
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="user_id1",referencedColumnName="user_id")
-	private User user_id1;
+	private User user;
 	
-	@Column
+	@Column(length = 40,nullable = false)
 	private String name;
 	
-	@Column
+	@Column(length = 10,nullable = false)
 	private String mobile_no;
 	
-	@Column
+	@Column(length = 100,nullable = false)
 	private String address;
 	
-	@Column
+	@Column(length = 20,nullable = false)
 	private String city;
 	
-	@Column
+	@Column(length = 40, unique = true)
 	private String email;
 	
-	@Column
+	@Column(length = 30,nullable = false)
 	private String state;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -54,10 +54,10 @@ public class Subadmin {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Subadmin(User user_id1, String name, String mobile_no, String address, String city,
+	public Subadmin(User user, String name, String mobile_no, String address, String city,
 			String email, String state, Zone zone) {
 		super();
-		this.user_id1 = user_id1;
+		this.user = user;
 		this.name = name;
 		this.mobile_no = mobile_no;
 		this.address = address;
@@ -75,12 +75,12 @@ public class Subadmin {
 		this.subadmin_id = subadmin_id;
 	}
 
-	public User getUser_id1() {
-		return user_id1;
+	public User getUser() {
+		return user;
 	}
 
-	public void setUser_id1(User user_id1) {
-		this.user_id1 = user_id1;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public String getName() {
@@ -141,7 +141,7 @@ public class Subadmin {
 
 	@Override
 	public String toString() {
-		return "Subadmin [subadmin_id=" + subadmin_id + ", user_id1=" + user_id1 + ", name=" + name + ", mobile_no="
+		return "Subadmin [subadmin_id=" + subadmin_id + ", user=" + user + ", name=" + name + ", mobile_no="
 				+ mobile_no + ", address=" + address + ", city=" + city + ", email=" + email + ", state=" + state
 				+ ", zone=" + zone + "]";
 	}

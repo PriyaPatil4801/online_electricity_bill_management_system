@@ -7,15 +7,18 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.entities.Admin;
 import com.app.entities.Consumer;
 import com.app.entities.ConsumerRegister;
 import com.app.entities.User;
-
+import com.app.entities.Zone;
 import com.app.service.ConsumerService;
 import com.app.service.UserService;
+import com.app.service.ZoneService;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -27,6 +30,8 @@ public class ConsumerController {
 	@Autowired
 	UserService uservice;
 	
+	@Autowired
+	ZoneService zservice;
 	
 	@PostMapping("/regConsumer")
 	public Consumer registerConsumer(@RequestBody ConsumerRegister cr)
@@ -36,9 +41,9 @@ public class ConsumerController {
 		User inserted =uservice.register(u);
 		//System.out.println(u);
 		//Zone z= new Zone(cr.getZone_id().getZone_name());
-		//Zone inserted1 =zservice.register(z);
+		Zone zoneid =zservice.getZone(Integer.parseInt(cr.getZone_id()));
 		//System.out.println(z);
-		Consumer c= new Consumer(inserted,cr.getName(),cr.getMobile_no(),cr.getAddress(),cr.getCity(),cr.getEmail(),cr.getState(),cr.getZone_id());
+		Consumer c= new Consumer(inserted,cr.getName(),cr.getMobile_no(),cr.getAddress(),cr.getCity(),cr.getEmail(),cr.getState(),zoneid);
 		//System.out.println(c);
 		return cservice.registerConsumer(c);
 			
@@ -54,5 +59,19 @@ public class ConsumerController {
 	public List<Consumer> getbyZone(@PathVariable ("zid") int zone_id)
 	{
 		return cservice.getbyZone(zone_id);
+	}
+	
+	@CrossOrigin(origins = "*")
+	@PostMapping("/updateConsumer/{id}")
+	public Consumer updateAdmin(@RequestBody Consumer c,@PathVariable ("id") int id )
+	{
+		cservice.update(c,id);
+		return c;
+	}
+	
+	@GetMapping("/getConsumer/{id}")
+	public Consumer getConsumerbyuserid(@PathVariable ("id") int user_id)
+	{
+		return cservice.getConsumerbyuserid(user_id);
 	}
 }

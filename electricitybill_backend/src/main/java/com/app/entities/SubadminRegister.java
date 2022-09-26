@@ -9,7 +9,7 @@ public class SubadminRegister {
 	String address;
 	String city;		
 	String state;	
-	Zone zone_id;
+	String zone_id;
 
 	public SubadminRegister() {
 		super();
@@ -17,7 +17,7 @@ public class SubadminRegister {
 	}
 
 	public SubadminRegister(String email, String password, String name, String mobile_no, String address, String city,
-			String state, Zone zone_id) {
+			String state, String zone_id) {
 		super();
 		this.email = email;
 		this.password = password;
@@ -85,11 +85,11 @@ public class SubadminRegister {
 		this.state = state;
 	}
 
-	public Zone getZone_id() {
+	public String getZone_id() {
 		return zone_id;
 	}
 
-	public void setZone_id(Zone zone_id) {
+	public void setZone_id(String zone_id) {
 		this.zone_id = zone_id;
 	}
 

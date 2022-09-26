@@ -3,12 +3,10 @@ package com.app.entities;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -24,37 +22,32 @@ public class Admin {
 	@JoinColumn(name="user_id2",referencedColumnName="user_id")
 	private User user;
 	
-	@Column
+	@Column(length = 40,nullable = false)
 	private String name;
 	
-	@Column
+	@Column(length = 10,nullable = false)
 	private String mobile_no;
 	
-	@Column
+	@Column(length = 100,nullable = false)
 	private String address;
 	
-	@Column
+	@Column(length = 20,nullable = false)
 	private String city;
 	
-	@Column
+	@Column(length = 40, unique = true)
 	private String email;
 	
-	@Column
+	@Column(length = 30,nullable = false)
 	private String state;
 	
-	/*@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="zone_id2",referencedColumnName="zone_id")
-	private Zone zone;
-*/
 	public Admin() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Admin(Integer admin_id, User user, String name, String mobile_no, String address, String city,
+	public Admin(User user, String name, String mobile_no, String address, String city,
 			String email, String state) {
 		super();
-		this.admin_id = admin_id;
 		this.user = user;
 		this.name = name;
 		this.mobile_no = mobile_no;
@@ -129,14 +122,6 @@ public class Admin {
 		this.state = state;
 	}
 
-	/*public Zone getZone() {
-		return zone;
-	}
-
-	public void setZone(Zone zone) {
-		this.zone = zone;
-	}
-*/
 	@Override
 	public String toString() {
 		return "Admin [admin_id=" + admin_id + ", user_id=" + user + ", name=" + name + ", mobile_no=" + mobile_no

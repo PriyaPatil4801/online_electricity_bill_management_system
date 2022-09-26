@@ -4,13 +4,17 @@ import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name="bills")
@@ -18,53 +22,54 @@ public class Bill {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int bill_id;
+	private int bill_id;
 	
-	//@ManyToOne(fetch=FetchType.LAZY)
-	//@JoinColumn(name="consumer_id",referencedColumnName="consumer_id")
-	//Consumer consumer;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="consumer_id",referencedColumnName="consumer_id")
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	private Consumer consumer;
+	//@Column
+	//int consumer_id;
 	@Column
-	int consumer_id;
-	@Column
-	int units;
-	
-	@Column
-	double current_billAmt;
+	private int units;
 	
 	@Column
-	double dues;
+	private double current_billAmt;
 	
 	@Column
-	double fine;
+	private double dues;
 	
 	@Column
-	double total_billAmt;
+	private double fine;
 	
 	@Column
-	double tax;
+	private double total_billAmt;
 	
 	@Column
-	@JsonFormat(pattern="yyyy-mm-dd")
+	private double tax;
+	
+	@Column
+	@JsonFormat(pattern="yyyy-MM-dd")
 	//@DateTimeFormat(pattern="yyyy-mm-dd")
-	Date bill_date;
+	private Date bill_date;
 	
 	@Column
-	@JsonFormat(pattern="yyyy-mm-dd")
+	@JsonFormat(pattern="yyyy-MM-dd")
 	//@DateTimeFormat(pattern="yyyy-mm-dd")
-	Date due_date;
+	private Date due_date;
 	
-	@Column
-	String status;
+	@Column(length = 20)
+	private String status;
 
 	public Bill() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Bill(int consumer_id, int units, double current_billAmt, double dues, double fine,
+	public Bill( Consumer consumer, int units, double current_billAmt, double dues, double fine,
 			double total_billAmt, double tax, Date bill_date, Date due_date, String status) {
 		super();
-		this.consumer_id = consumer_id;
+		this.consumer = consumer;
 		this.units = units;
 		this.current_billAmt = current_billAmt;
 		this.dues = dues;
@@ -84,12 +89,12 @@ public class Bill {
 		this.bill_id = bill_id;
 	}
 
-	public int getConsumer_id() {
-		return consumer_id;
+	public Consumer getConsumer() {
+		return consumer;
 	}
 
-	public void setConsumer_id(int consumer_id) {
-		this.consumer_id = consumer_id;
+	public void setConsume(Consumer consumer) {
+		this.consumer = consumer;
 	}
 
 	public int getUnits() {
@@ -166,7 +171,7 @@ public class Bill {
 
 	@Override
 	public String toString() {
-		return "Bill [bill_id=" + bill_id + ", consumer_id=" + consumer_id + ", units=" + units + ", current_billAmt="
+		return "Bill [bill_id=" + bill_id + ", consumer=" + consumer + ", units=" + units + ", current_billAmt="
 				+ current_billAmt + ", dues=" + dues + ", fine=" + fine + ", total_billAmt=" + total_billAmt + ", tax="
 				+ tax + ", bill_date=" + bill_date + ", due_date=" + due_date + ", status=" + status + "]";
 	}

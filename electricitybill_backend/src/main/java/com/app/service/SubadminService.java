@@ -5,14 +5,20 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.app.entities.Consumer;
 import com.app.entities.Subadmin;
+import com.app.entities.User;
 import com.app.repository.SubadminRepository;
+import com.app.repository.UserRepository;
 
 @Service
 public class SubadminService {
 
 	@Autowired
 	SubadminRepository srepo;
+	
+	@Autowired
+	UserRepository urepo;
 	
 	public List<Subadmin> getAll()
 	{
@@ -32,4 +38,26 @@ public class SubadminService {
 		 srepo.deleteById(pid);
 		 return 1;
 	}
+	
+	public Subadmin update(Subadmin a,int id)
+	{
+		//int id=a.getAdmin_id();
+		User u=urepo.findById(id).get();
+		Subadmin s= srepo.findById(a.getSubadmin_id()).get();
+		s.setUser(u);
+		s.setName(a.getName());
+		s.setAddress(a.getAddress());
+		s.setMobile_no(a.getMobile_no());
+		s.setCity(a.getCity());
+		s.setState(a.getState());
+		s.setEmail(u.getEmail());
+		s.setZone(a.getZone());
+		return srepo.save(s);
+	}
+	
+	public Subadmin getSubadminbyuserid(int aid)
+	{
+		return srepo.getSubadminbyuserid(aid);
+	}
+
 }
