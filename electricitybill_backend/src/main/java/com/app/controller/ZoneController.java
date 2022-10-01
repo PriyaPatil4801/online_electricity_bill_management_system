@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.app.entities.Consumer;
-import com.app.entities.Subadmin;
 import com.app.entities.Zone;
 import com.app.service.ZoneService;
 import com.app.service.ConsumerService;
@@ -49,13 +47,5 @@ public class ZoneController {
 		return zservice.getAll();//no view resolver is needed so no need of view
 	}
 	
-	/*@GetMapping("/getZonebyConsumerId/{id}")
-	public Zone getZonebyConsumerId(@PathVariable ("id") int Consumer_id)
-	{
-		Consumer c=cservice.getConsumerbyId(Consumer_id);
-		
-		int zone_id=c.getZone().getZone_id();
-		return zservice.getZone(zone_id);
-	}*/
 	
 }

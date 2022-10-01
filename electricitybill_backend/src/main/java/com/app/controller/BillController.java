@@ -1,8 +1,5 @@
 package com.app.controller;
 
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +30,6 @@ public class BillController {
 	@PostMapping("/addNewBill")
 	public Bill generateBill(@RequestBody BillGenerator b) //zservice.getZone(Integer.parseInt(cr.getZone_id()));
 	{	Consumer c= cservice.getConsumerbyId(b.getConsumer_id());
-		//Date d1=new SimpleDateFormat("yyyy-MM-dd").parse(b.getBill_date());
-		//Date d2=new SimpleDateFormat("yyyy-MM-dd").parse(b.getDue_date());
 		Bill bill=new Bill(c, b.getUnits(), b.getCurrent_billAmt(), b.getDues(), b.getFine(),b.getTotal_billAmt(), b.getTax(),b.getBill_date(), b.getDue_date(), b.getStatus());	
 		return bservice.generateBill(bill);
 	}

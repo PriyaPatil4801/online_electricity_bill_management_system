@@ -31,10 +31,10 @@ public class Admin {
 	@Column(length = 100,nullable = false)
 	private String address;
 	
-	@Column(length = 20,nullable = false)
+	@Column(length = 30,nullable = false)
 	private String city;
 	
-	@Column(length = 40, unique = true)
+	@Column(length = 40, unique = true,nullable = false)
 	private String email;
 	
 	@Column(length = 30,nullable = false)

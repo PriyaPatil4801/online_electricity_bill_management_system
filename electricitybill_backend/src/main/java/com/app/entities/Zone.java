@@ -15,7 +15,7 @@ public class Zone {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int zone_id;
 	
-	@Column(length = 15,nullable = false)
+	@Column(length = 30,nullable = true)
 	private String zone_name;
 
 	public Zone() {

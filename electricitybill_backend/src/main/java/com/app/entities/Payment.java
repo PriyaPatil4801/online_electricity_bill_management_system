@@ -12,7 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Fetch;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name="payment_details")
@@ -24,32 +24,33 @@ public class Payment {
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="consumer_id",referencedColumnName="consumer_id")
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private	Consumer consumer;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="bill_id",referencedColumnName="bill_id")
-	//@Fetch(FechMode.JOIN)
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private Bill bill;
 	
-	@Column(length = 30,nullable = false)
+	@Column(length = 40,nullable = true)
 	private String name;
 	
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private Date payment_date;
 	
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private double total_billAmt;
 	
-	@Column(length = 15,nullable = false)
+	@Column(length = 15,nullable = true)
 	private String card_type;
 	
-	@Column(length = 16,nullable = false)
+	@Column(length = 16,nullable = true)
 	private String card_no;
 	
-	@Column(length = 4,nullable = false)
+	@Column(length = 4,nullable = true)
 	private String cvv;
 	
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private Date exp_date;
 
 	public Payment() {

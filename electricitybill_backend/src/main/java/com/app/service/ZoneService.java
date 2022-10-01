@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.app.entities.Subadmin;
 import com.app.entities.Zone;
 import com.app.repository.ZoneRepository;
 

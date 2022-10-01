@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.app.entities.Admin;
 import com.app.entities.Consumer;
 import com.app.entities.User;
 import com.app.repository.ConsumerRepository;
@@ -38,7 +37,6 @@ public class ConsumerService {
 	
 	public Consumer update(Consumer a,int id)
 	{
-		//int id=a.getAdmin_id();
 		User u=urepo.findById(id).get();
 		Consumer c= crepo.findById(a.getConsumer_id()).get();
 		c.setUser(u);

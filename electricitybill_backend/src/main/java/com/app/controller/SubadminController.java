@@ -7,11 +7,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.app.entities.Consumer;
 import com.app.entities.Subadmin;
 import com.app.entities.SubadminRegister;
 import com.app.entities.User;
@@ -46,16 +44,13 @@ public class SubadminController {
 		User u= new User(sr.getEmail(),sr.getPassword(),"subadmin");
 		User inserted =uservice.register(u);
 		System.out.println(u);
-		//Zone z= new Zone(cr.getZone_id().getZone_name());
-		//Zone inserted1 =zservice.register(z);
-		//System.out.println(z);
 		Zone zoneid =zservice.getZone(Integer.parseInt(sr.getZone_id()));
 		Subadmin c= new Subadmin(inserted,sr.getName(),sr.getMobile_no(),sr.getAddress(),sr.getCity(),sr.getEmail(),sr.getState(),zoneid);
 		System.out.println(c);
 		return sservice.registerSubadmin(c);
 	}
 	
-	@GetMapping("/deleteSubadmin/{pid}")
+	@PostMapping("/deleteSubAdminByID/{pid}")
 	public int delete(@PathVariable ("pid") int  id)
 	{
 		return sservice.delete(id);

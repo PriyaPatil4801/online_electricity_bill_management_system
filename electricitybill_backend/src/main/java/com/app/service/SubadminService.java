@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.app.entities.Consumer;
 import com.app.entities.Subadmin;
 import com.app.entities.User;
 import com.app.repository.SubadminRepository;
@@ -41,7 +40,6 @@ public class SubadminService {
 	
 	public Subadmin update(Subadmin a,int id)
 	{
-		//int id=a.getAdmin_id();
 		User u=urepo.findById(id).get();
 		Subadmin s= srepo.findById(a.getSubadmin_id()).get();
 		s.setUser(u);

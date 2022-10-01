@@ -14,7 +14,6 @@ import com.app.entities.Bill;
 import com.app.entities.Consumer;
 import com.app.entities.Payment;
 import com.app.entities.PaymentGenerator;
-import com.app.entities.Zone;
 import com.app.service.BillService;
 import com.app.service.ConsumerService;
 import com.app.service.PaymentService;
@@ -43,7 +42,8 @@ public class PaymentController {
 		return pservice.makepayment(pay);
 	}
 
-	@GetMapping("/getPayment/{id}")
+	@CrossOrigin(origins = "*")
+	@GetMapping("/fetchBillPaymentReport/{id}")
 	public List<Payment> getPayment(@PathVariable ("id") int consumer_id)
 	{
 		return pservice.getPayment(consumer_id);

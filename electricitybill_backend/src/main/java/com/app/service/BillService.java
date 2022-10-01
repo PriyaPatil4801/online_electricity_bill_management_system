@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.app.entities.Bill;
-import com.app.entities.Consumer;
 import com.app.repository.BillRepository;
 
 @Service

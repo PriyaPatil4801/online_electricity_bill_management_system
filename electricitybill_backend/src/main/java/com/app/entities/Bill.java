@@ -12,8 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -28,37 +26,32 @@ public class Bill {
 	@JoinColumn(name="consumer_id",referencedColumnName="consumer_id")
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private Consumer consumer;
-	//@Column
-	//int consumer_id;
-	@Column
+	
+	@Column(nullable = true)
 	private int units;
 	
-	@Column
+	@Column(nullable = true)
 	private double current_billAmt;
 	
-	@Column
+	@Column(nullable = true)
 	private double dues;
 	
-	@Column
+	@Column(nullable = true)
 	private double fine;
 	
-	@Column
+	@Column(nullable = true)
 	private double total_billAmt;
 	
-	@Column
+	@Column(nullable = true)
 	private double tax;
 	
-	@Column
-	@JsonFormat(pattern="yyyy-MM-dd")
-	//@DateTimeFormat(pattern="yyyy-mm-dd")
+	@Column(nullable = true)
 	private Date bill_date;
 	
-	@Column
-	@JsonFormat(pattern="yyyy-MM-dd")
-	//@DateTimeFormat(pattern="yyyy-mm-dd")
+	@Column(nullable = true)
 	private Date due_date;
 	
-	@Column(length = 20)
+	@Column(length = 20,nullable = true)
 	private String status;
 
 	public Bill() {
