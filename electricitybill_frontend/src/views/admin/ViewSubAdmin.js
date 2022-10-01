@@ -1,4 +1,3 @@
-import { render } from "@testing-library/react";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
@@ -6,8 +5,6 @@ import image from '../images/logo.gif';
 
 
 function ViewSubAdmin() {
-   // let w=200;
-    // let h=200;
     const [hide, toggleHide]=useState(true);
     
     const [zones, setZones]=useState([]);
@@ -30,11 +27,6 @@ function ViewSubAdmin() {
         setTimeout(()=>{ x.className = x.className.replace("show", ""); }, 3000);
     }
     const {zone_id} = zone;
-    // const reloadPage = () => {
-    //     setZone({
-    //         zone_id:''
-    //     });
-    // }
     const handleLogOut = e => {
         e.preventDefault();
         localStorage.clear();
@@ -51,8 +43,6 @@ function ViewSubAdmin() {
             (response) => {
                 console.log(response);
                 setSubadmin( response.data);
-               // subadmins = JSON.parse(response);
-                //alert("Added Successfully");
                 
             }, (error) => {
                 console.log(error);
@@ -65,8 +55,6 @@ function ViewSubAdmin() {
             (response) => {
                 console.log(response);
                 setZones( response.data);
-                //consumers = JSON.parse(response);
-                //alert("Added Successfully");
                 
             }, (error) => {
                 console.log(error);
@@ -76,7 +64,6 @@ function ViewSubAdmin() {
     }
     const validateInput = e => {
         let { name, value } = e.target;
-        let isValid = true;
         setError(prev => {
             const stateObj = { ...prev, [name]: "" };
         
@@ -84,7 +71,6 @@ function ViewSubAdmin() {
             case "zone_id":
                 if (!value || value === "0") {
                 stateObj[name] = "Please select zone.";
-                isValid = false;
                 }
                 break;
                 
@@ -95,6 +81,23 @@ function ViewSubAdmin() {
             return stateObj;
         });
     }
+
+    const deleteSelectedSubAdmin = (e)=>{
+        let key= e.target.id;
+        let subadminID = parseInt(subadmin[key].subadmin_id);
+        axios.post(`http://localhost:8080/deleteSubAdminByID/${subadminID}`).then(
+                        (response) => {
+                            console.log(response);
+                            getDataFromServer(zone);
+                            alert("Sub Admin has been deleted successfully!!");
+                            
+                        }, (error) => {
+                            console.log(error);
+                            alert("Something went wrong while deleting Sub Admin. Please try again after sometime.");
+                        }
+                    );
+    }
+
     //react hook to handle component side effect. checking the user authorization before component load and only then showing content.
     useEffect(()=>{
         let user=JSON.parse(localStorage.getItem("loggedinuser"));
@@ -130,7 +133,7 @@ function ViewSubAdmin() {
                 </a>
                 <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/AddUser");}}>
                     <i className="fas fa-id-badge w3-xlarge"></i>
-                    <p>Add User</p>
+                    <p>Add Sub Admin</p>
                 </a>
                 <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/GenerateBills");}}>
                     <i className="fas fa-cart-plus w3-xlarge"></i>
@@ -145,7 +148,7 @@ function ViewSubAdmin() {
                 <div className="w3-panel w3-black">
                     <p><span className="h3 mb-0 text-gray-800">Admin Panel</span><span  className="support"> For Support:  <i
                             className="fas fa-phone-square ml-4 fa-sm fa-fw mr-2 "></i>+91 9011100528 <i className="fa fa-envelope mr-2 ml-4" aria-hidden="true"></i>
-                             onlinebilelectricity@gmail.com <button  type="button" className="btn btn-primary" onClick={(e) =>handleLogOut(e)}>Log Out</button></span> 
+                             onlineelectricitybill@gmail.com <button  type="button" className="btn btn-primary" onClick={(e) =>handleLogOut(e)}>Log Out</button></span> 
                     </p>
                     
                 </div> 
@@ -158,7 +161,7 @@ function ViewSubAdmin() {
                         
                         <div className="container PageContainer">
                             <div className="row">
-                                <label className="display-4 text-center">View Sub-admins</label>
+                                <label className="display-4 text-center center">View Sub-admins</label>
                             </div>
                             <form onSubmit={e => FormHandle(e)} id="contact-form">
                                 <div className="row">
@@ -170,10 +173,6 @@ function ViewSubAdmin() {
                                                         <option value={val.zone_id}>{val.zone_name}</option>
                                                     )
                                             })}
-                                            {/* <option value="1">Katraj</option>
-                                            <option value="2">Kothrud</option>
-                                            <option value="3">Hadapsar</option>
-                                            <option value="4">Nigdi</option> */}
                                         </select>
                                         {error.zone_id && <span className='err'>{error.zone_id}</span>}
                                     </div>
@@ -195,6 +194,7 @@ function ViewSubAdmin() {
                                                 <th>Address</th>
                                                 <th>City</th>
                                                 <th>State</th>
+                                                <th>Delete</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -208,6 +208,7 @@ function ViewSubAdmin() {
                                                     <td>{val.address}</td>
                                                     <td>{val.city}</td>
                                                     <td>{val.state}</td>
+                                                    <td><button  id={key} className="tablebutton" onClick={deleteSelectedSubAdmin}>Delete</button></td>
                                                 </tr>
                                             )
                                             })}

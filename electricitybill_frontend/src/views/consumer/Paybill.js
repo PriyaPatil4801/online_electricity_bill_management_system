@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import image from '../images/logo.gif';
 import yayimage from '../images/yay.gif';
-import { computeHeadingLevel } from '@testing-library/react';
 
 function PayBill() {
     let navigate=useNavigate();
@@ -57,7 +56,6 @@ function PayBill() {
                 if(response.data.length=== 0){
                     setIsPendingBill(false);
                 }else{
-                    //let fetchedPendingBill = JSON.parse(response.data);
                     setPendingBill({...pendingBill,
                         bill_id:response.data.bill_id,
                         consumer_id:response.data.consumer.consumer_id,
@@ -72,7 +70,6 @@ function PayBill() {
                         due_date:response.data.due_date,
                         status:response.data.status
                     });
-                    //alert("Added Successfully");
                 }
                 
             }, (error) => {
@@ -185,7 +182,6 @@ function PayBill() {
             fetchPendingBill();
             
             console.log(pendingBill.bill_id);
-            // setPendingBill({...pendingBill});
             let date = new Date().toISOString().slice(0,10);
             setTodaysDate(date);
         }else{
@@ -252,16 +248,7 @@ function PayBill() {
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        {/* <td>{pendingBill.bill_id}</td>
-                                                        <td>{pendingBill.bill_date}</td>
-                                                        <td>{pendingBill.name}</td>
-                                                        <td>{pendingBill.units}</td>
-                                                        <td>{pendingBill.current_billAmt}</td>
-                                                        <td>{pendingBill.tax}</td>
-                                                        <td>{pendingBill.dues}</td>
-                                                        <td>{pendingBill.fine}</td>
-                                                        <td>{pendingBill.total_billAmt}</td>
-                                                        <td>{pendingBill.due_date}</td> */}
+                                                        
                                                         <td>{bill_id}</td>
                                                         <td>{bill_date}</td>
                                                         <td>{name}</td>
@@ -279,7 +266,6 @@ function PayBill() {
                                     </div>
                                     <div className="row">
                                         <div className="col-12 col-lg-10 col-xl-10 offset-xl-1 top-padding">
-                                            {/* <button className="loginButton buttondecoration">Pay Now</button> */}
                                             <button type="button" className="loginButton buttondecoration" data-toggle="modal" data-target="#staticBackdrop" onClick={updatePaymentDetails}>
                                                 Pay Now
                                             </button>
@@ -355,7 +341,7 @@ function PayBill() {
                                                         </div>
                                                         <div className="col-70">
                                                         <select className="display-6" aria-label=".form-select-lg example" name="card_type" value={card_type} onChange={(e) => onInputChange(e)} onBlur={validateInput} >
-                                                            <option value="0">Open this select menu</option>
+                                                            <option value="0">Open this select Card Type</option>
                                                             <option value="VISA">VISA</option>
                                                             <option value="RUPAY">RUPAY</option>
                                                             <option value="MASTERCARD">MASTERCARD</option>

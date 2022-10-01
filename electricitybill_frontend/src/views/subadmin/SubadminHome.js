@@ -1,4 +1,3 @@
-import { render } from "@testing-library/react";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
@@ -77,18 +76,6 @@ function SubAdminHome() {
                     <i className="fa fa-eye w3-xlarge"></i>
                     <p>View Consumer</p>
                 </a>
-                {/* <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/ViewSubAdmin");}}>
-                    <i className="fa fa-eye w3-xlarge"></i>
-                    <p>View Sub Admins</p>
-                </a> */}
-                {/* <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/AddZone");}}>
-                    <i className="fas fa-clipboard w3-xlarge"></i>
-                    <p>Add Zone</p>
-                </a> */}
-                <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/SubAdminAddUser");}}>
-                    <i className="fas fa-id-badge w3-xlarge"></i>
-                    <p>Add User</p>
-                </a>
                 <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/SubAdminGenerateBills");}}>
                     <i className="fas fa-cart-plus w3-xlarge"></i>
                     <p>Generate Bills</p>
@@ -102,7 +89,7 @@ function SubAdminHome() {
                 <div className="w3-panel w3-black">
                     <p><span className="h3 mb-0 text-gray-800">Sub Admin Panel</span><span  className="support"> For Support:  <i
                             className="fas fa-phone-square ml-4 fa-sm fa-fw mr-2 "></i>+91 9011100528 <i className="fa fa-envelope mr-2 ml-4" aria-hidden="true"></i>
-                             onlinebilelectricity@gmail.com <button  type="button" className="btn btn-primary" onClick={(e) =>handleLogOut(e)}>Log Out</button></span> 
+                             onlineelectricitybill@gmail.com <button  type="button" className="btn btn-primary" onClick={(e) =>handleLogOut(e)}>Log Out</button></span> 
                     </p>
                     
                 </div> 

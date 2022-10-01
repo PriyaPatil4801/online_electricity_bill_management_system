@@ -88,7 +88,7 @@ function AdminHome() {
                     </a>
                     <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/AddUser");}}>
                         <i className="fas fa-id-badge w3-xlarge"></i>
-                        <p>Add User</p>
+                        <p>Add Sub Admin</p>
                     </a>
                     <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/GenerateBills");}}>
                         <i className="fas fa-cart-plus w3-xlarge"></i>

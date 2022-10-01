@@ -4,8 +4,6 @@ import { useNavigate } from "react-router-dom";
 import image from '../images/logo.gif';
 
 function AddZone() {
-    let w=200;
-    let h=200;
     let navigate=useNavigate();
     
     const [hide, toggleHide]=useState(true);
@@ -88,7 +86,7 @@ function AddZone() {
                     </a>
                     <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/AddUser");}}>
                         <i className="fas fa-id-badge w3-xlarge"></i>
-                        <p>Add User</p>
+                        <p>Add Sub Admin</p>
                     </a>
                     <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/GenerateBills");}}>
                         <i className="fas fa-cart-plus w3-xlarge"></i>
@@ -116,7 +114,7 @@ function AddZone() {
                             
                             <div className="container PageContainer">
                                 <div className="row">
-                                    <label className="display-4 text-center">Add Zone</label>
+                                    <label className="display-4 text-center center">Add Zone</label>
                                 </div>
                                 <form onSubmit={e => FormHandle(e)} id="contact-form">
                                     <div className="row">

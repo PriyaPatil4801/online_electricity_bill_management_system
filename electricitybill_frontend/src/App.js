@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import RegisterComsumer from './views/consumer/RegisterConsumer';
 import Login from './views/user/Login';
@@ -14,7 +13,6 @@ import GenerateBills from './views/admin/GenerateBills';
 import ViewConsumer from './views/admin/ViewConsumer';
 import ViewSubAdmin from './views/admin/ViewSubAdmin';
 import AdminProfile from './views/admin/AdminProfile';
-import SubAdminAddUser from './views/subadmin/AddUser';
 import SubAdminViewConsumer from './views/subadmin/ViewConsumer';
 import SubAdminProfile from './views/subadmin/SubAdminProfile';
 import SubAdminBillandPaymentReport from './views/subadmin/BillandPaymentReport';
@@ -44,7 +42,6 @@ function App() {
           <Route path="/AdminProfile" element={<AdminProfile />} />
           <Route path="/SubAdminProfile" element={<SubAdminProfile />} />
           <Route path="/SubadminHome" element={<SubadminHome />} />
-          <Route path="/SubAdminAddUser" element={<SubAdminAddUser />} />
           <Route path="/SubAdminViewConsumer" element={<SubAdminViewConsumer />} />
           <Route path="/SubAdminBillandPaymentReport" element={<SubAdminBillandPaymentReport />} />
           <Route path="/SubAdminGenerateBills" element={<SubAdminGenerateBills />} />

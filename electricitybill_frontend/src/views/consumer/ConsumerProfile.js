@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import image from '../images/logo.gif';
 
 function ConsumerProfile() {
-    let firstentry=true;
     let navigate=useNavigate();
     const [hide, toggleHide]=useState(true);
     const [consumer, setConsumer] = useState({  
@@ -156,13 +155,10 @@ function ConsumerProfile() {
                     zone:response.data.zone
                 });
                 ShowReadOnly();
-                //navigate("/Login");
                 
             }, (error) => {
                 console.log(error);
                 alert("error while updating profile. Please try again.");
-                //ShowReadOnly();
-                //navigate("/consumerProfile");
             }
         );
     }
@@ -242,7 +238,7 @@ function ConsumerProfile() {
                         <div className="col-12 col-lg-10 col-xl-10 offset-xl-1 top-padding">
                             <div className="container PageContainer" id="ReadOnly">
                                 <div className="row">
-                                    <label className="display-4 text-center">Consumer Profile</label>
+                                    <label className="display-4 text-center center">Consumer Profile</label>
                                 </div>
                                 
                                     <div className="row">
@@ -311,7 +307,7 @@ function ConsumerProfile() {
                             </div>
                             <div className="container PageContainer ShowHideContainer" id="ReadWrite">
                                 <div className="row">
-                                    <label className="display-4 text-center">Consumer Profile</label>
+                                    <label className="display-4 text-center center">Consumer Profile</label>
                                 </div>
                                 <form onSubmit={e => FormHandle(e)} id="contact-form">
                                     <div className="row">

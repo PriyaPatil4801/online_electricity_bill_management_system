@@ -65,7 +65,6 @@ function RegisterComsumer() {
     const validateInput = e => {
         console.log(e.target);
         let { name, value } = e.target;
-        //let isValid = true;
         setError(prev => {
           const stateObj = { ...prev, [name]: "" };
      
@@ -73,77 +72,62 @@ function RegisterComsumer() {
             case "name":
               if (!value) {
                 stateObj[name] = "Please enter name.";
-                //isValid = false;
               }
               break;
             
             case "mobile_no":
             if (!value) {
                 stateObj[name] = "Please enter mobile no.";
-               // isValid = false;
             }else if(value.length!= 10){
                 stateObj[name] = "Please enter valid mobile no.";
-               // isValid = false;
             }
             break;
 
             case "address":
                 if (!value) {
                 stateObj[name] = "Please enter address.";
-               // isValid = false;
                 }
                 break;
 
             case "city":
                 if (!value) {
                 stateObj[name] = "Please enter city.";
-               // isValid = false;
                 }
                 break;
 
             case "email":
                 if (!value) {
                 stateObj[name] = "Please enter email.";
-               // isValid = false;
                 }
                 break;
 
             case "state":
                 if (!value) {
                 stateObj[name] = "Please enter state.";
-               // isValid = false;
                 }
                 break;
 
             case "zone_id":
                 if (!value || value == "0") {
                 stateObj[name] = "Please select zone.";
-                //isValid = false;
                 }
                 break;
      
             case "password":
               if (!value) {
                 stateObj[name] = "Please enter Password.";
-               // isValid = false;
               } else if (user.confirmPassword && value !== user.confirmPassword) {
                 stateObj["confirmPassword"] = "Password and Confirm Password does not match.";
-                //isValid = false;
               } else {
                 stateObj["confirmPassword"] = user.confirmPassword ? "" : error.confirmPassword;
-                if(error.confirmPassword!=""){
-                  //  isValid = false;
-                }
               }
               break;
      
             case "confirmPassword":
               if (!value) {
                 stateObj[name] = "Please enter Confirm Password.";
-              //  isValid = false;
               } else if (user.password && value !== user.password) {
                 stateObj[name] = "Password and Confirm Password does not match.";
-               // isValid = false;
               }
               break;
      
@@ -197,8 +181,6 @@ function RegisterComsumer() {
             (response) => {
                 console.log(response);
                 setZones( response.data);
-                //consumers = JSON.parse(response);
-                //alert("Added Successfully");
                 
             }, (error) => {
                 console.log(error);
@@ -291,10 +273,6 @@ function RegisterComsumer() {
                                                         <option value={val.zone_id}>{val.zone_name}</option>
                                                     )
                                             })}
-                                        {/* <option value="1">Katraj</option>
-                                        <option value="2">Kothrud</option>
-                                        <option value="3">Hadapsar</option>
-                                        <option value="4">Nigdi</option> */}
                                     </select>
                                     {error.zone_id && <span className='err'>{error.zone_id}</span>}
                                 </div>

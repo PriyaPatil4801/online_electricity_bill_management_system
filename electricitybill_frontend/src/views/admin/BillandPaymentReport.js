@@ -1,4 +1,3 @@
-import { render } from "@testing-library/react";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
@@ -6,8 +5,6 @@ import image from '../images/logo.gif';
 
 
 function BillandPaymentReport() {
-     // let w=200;
-    // let h=200;
     const [hide, toggleHide]=useState(true);
     const [zones, setZones]=useState([]);
     const [consumers,setConsumers] =useState([]);
@@ -25,11 +22,6 @@ function BillandPaymentReport() {
         setZone({ ...zone, [e.target.name]: e.target.value })
     }
     const {zone_id} = zone;
-    // const reloadPage = () => {
-    //     setZone({
-    //         zone_id:''
-    //     });
-    // }
     //toast notification
     const showSnackBar = () =>{
         var x = document.getElementById("snackbar");
@@ -55,7 +47,6 @@ function BillandPaymentReport() {
                 console.log(response);
                 setConsumers( response.data);
                 console.log(consumers);
-                //alert("Added Successfully");
                 
             }, (error) => {
                 console.log(error);
@@ -69,8 +60,6 @@ function BillandPaymentReport() {
             (response) => {
                 console.log(response);
                 setZones( response.data);
-                //consumers = JSON.parse(response);
-                //alert("Added Successfully");
                 
             }, (error) => {
                 console.log(error);
@@ -104,12 +93,11 @@ function BillandPaymentReport() {
     const viewBillPaymentReport=(e) =>{
         let id = e.target.id;
         let consumerID = parseInt(consumers[id].consumer_id);
-        axios.get(`http://localhost:8080/fetchConsumerBills/${consumerID}`).then(
+        axios.get(`http://localhost:8080/fetchBillPaymentReport/${consumerID}`).then(
             (response) => {
                 console.log(response);
                 setConsumerBills( response.data);
                 console.log(consumerBills);
-                //alert("Added Successfully");
                 
             }, (error) => {
                 console.log(error);
@@ -152,7 +140,7 @@ function BillandPaymentReport() {
                 </a>
                 <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/AddUser");}}>
                     <i className="fas fa-id-badge w3-xlarge"></i>
-                    <p>Add User</p>
+                    <p>Add Sub Admin</p>
                 </a>
                 <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/GenerateBills");}}>
                     <i className="fas fa-cart-plus w3-xlarge"></i>
@@ -180,7 +168,7 @@ function BillandPaymentReport() {
                         
                         <div className="container PageContainer">
                             <div className="row">
-                                <label className="display-4 text-center">Bill Payment Report</label>
+                                <label className="display-4 text-center center">Bill Payment Report</label>
                             </div>
                             <form onSubmit={e => FormHandle(e)} id="contact-form">
                                 <div className="row">
@@ -192,10 +180,6 @@ function BillandPaymentReport() {
                                                         <option value={val.zone_id}>{val.zone_name}</option>
                                                     )
                                             })}
-                                            {/* <option value="1">Katraj</option>
-                                            <option value="2">Kothrud</option>
-                                            <option value="3">Hadapsar</option>
-                                            <option value="4">Nigdi</option> */}
                                         </select>
                                         {error.zone_id && <span className='err'>{error.zone_id}</span>}
                                     </div>
@@ -263,18 +247,18 @@ function BillandPaymentReport() {
                                                                     {consumerBills.map((val,key) => {
                                                                     return (
                                                                         <tr key={key}>
-                                                                            <td>{val.bill_id}</td>
-                                                                            <td>{val.bill_date}</td>
-                                                                            <td>{val.units}</td>
-                                                                            <td>{val.current_billAmt}</td>
-                                                                            <td>{val.tax}</td>
-                                                                            <td>{val.dues}</td>
-                                                                            <td>{val.fine}</td>
-                                                                            <td>{val.total_billAmt}</td>
-                                                                            <td>{val.due_date}</td>
+                                                                            <td>{val.bill.bill_id}</td>
+                                                                            <td>{val.bill.bill_date}</td>
+                                                                            <td>{val.bill.units}</td>
+                                                                            <td>{val.bill.current_billAmt}</td>
+                                                                            <td>{val.bill.tax}</td>
+                                                                            <td>{val.bill.dues}</td>
+                                                                            <td>{val.bill.fine}</td>
+                                                                            <td>{val.bill.total_billAmt}</td>
+                                                                            <td>{val.bill.due_date}</td>
                                                                             <td>{val.payment_date}</td>
                                                                             <td>{val.payment_no}</td>
-                                                                            <td>{val.status}</td>
+                                                                            <td>{val.bill.status}</td>
                                                                         </tr>
                                                                         )
                                                                     })}

@@ -14,7 +14,7 @@ function PaymentHistory() {
     }
     const getDataFromServer = ( ) => {
         let userID=JSON.parse(localStorage.getItem("consumerID"));
-        axios.get(`http://localhost:8080/fetchPaidBills/${userID}`).then(
+        axios.get(`http://localhost:8080/fetchBillPaymentReport/${userID}`).then(
             (response) => {
                 console.log(response);
                 setPaidBills( response.data);
@@ -79,7 +79,7 @@ function PaymentHistory() {
                             
                             <div className="container PageContainer">
                                 <div className="row">
-                                    <label className="display-4 text-center">Payment History</label>
+                                    <label className="display-4 text-center center">Payment History</label>
                                 </div>
                                 <div className="row">
                                     <div className="col-12 col-lg-10 col-xl-10 offset-xl-1 top-padding">
@@ -104,18 +104,18 @@ function PaymentHistory() {
                                                 {paidBills.map((val,key) => {
                                                 return (
                                                     <tr key={key}>
-                                                        <td>{val.bill_id}</td>
-                                                        <td>{val.bill_date}</td>
-                                                        <td>{val.units}</td>
-                                                        <td>{val.current_billAmt}</td>
-                                                        <td>{val.tax}</td>
-                                                        <td>{val.dues}</td>
-                                                        <td>{val.fine}</td>
-                                                        <td>{val.total_billAmt}</td>
-                                                        <td>{val.due_date}</td>
+                                                        <td>{val.bill.bill_id}</td>
+                                                        <td>{val.bill.bill_date}</td>
+                                                        <td>{val.bill.units}</td>
+                                                        <td>{val.bill.current_billAmt}</td>
+                                                        <td>{val.bill.tax}</td>
+                                                        <td>{val.bill.dues}</td>
+                                                        <td>{val.bill.fine}</td>
+                                                        <td>{val.bill.total_billAmt}</td>
+                                                        <td>{val.bill.due_date}</td>
                                                         <td>{val.payment_date}</td>
                                                         <td>{val.payment_no}</td>
-                                                        <td>{val.status}</td>
+                                                        <td>{val.bill.status}</td>
                                                     </tr>
                                                     )
                                                 })}

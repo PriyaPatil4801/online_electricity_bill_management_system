@@ -1,4 +1,3 @@
-import { render } from "@testing-library/react";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
@@ -6,8 +5,6 @@ import image from '../images/logo.gif';
 
 
 function SubAdminGenerateBills() {
-    let w=200;
-    let h=200;
     const [hide, toggleHide]=useState(true);
     const [zones,setZones] =useState([]);
     const [consumers,setConsumers] =useState([]);
@@ -51,21 +48,18 @@ function SubAdminGenerateBills() {
         setZone({ ...zone, [e.target.name]: e.target.value })
     }
     const onUnitsChange = e =>{
-        let consumedUnits = e.target.value;
         setBillForm({...billform,[e.target.name]: e.target.value});
         console.log(billform);
 
     }
     const onDateChange = e =>{
-        setBillForm({...billform,[e.target.name]: e.target.value});
+        var date = new Date(e.target.value);
+        var dueDate= new Date(date.setMonth(date.getMonth()+1)).toISOString().split("T")[0];
+        setBillForm({...billform,[e.target.name]: e.target.value,
+        due_date:dueDate});
     }
     const {consumer_id,name,units,current_billAmt,dues,fine,total_billAmt,tax,bill_date,due_date,status}=billform;
     const {zone_id} = zone;
-    // const reloadPage = () => {
-    //     setZone({
-    //         zone_id:''
-    //     });
-    // }
     const handleLogOut = e => {
         e.preventDefault();
         localStorage.clear();
@@ -82,7 +76,6 @@ function SubAdminGenerateBills() {
             (response) => {
                 console.log(response);
                 setConsumers( response.data);
-                //alert("Added Successfully");
                 
             }, (error) => {
                 console.log(error);
@@ -112,12 +105,10 @@ function SubAdminGenerateBills() {
     const calculateBill = e=>{
         console.log(billform);
         let units = parseInt(billform.units);
-        //fetchPendingBill();
         setTimeout(()=>{
             let bill,tax,dues,fine,totalBill;
             console.log(pendingBill.bill_id);
             if(pendingBill.bill_id ==='' && units > 0){
-                console.log("inside0");
                 if(units<=100){
                     bill=units*3;
                     dues=0;
@@ -173,7 +164,6 @@ function SubAdminGenerateBills() {
         axios.get(`http://localhost:8080/fetchPendingBill/${consumerid}`).then(
             (response) => {
                 console.log(response);
-                //let fetchedPendingBill = JSON.parse(response.data);
                 if(response.data!=""){
                     setPendingBill({ ...pendingBill,
                         bill_id:response.data.bill_id,
@@ -189,8 +179,6 @@ function SubAdminGenerateBills() {
                         due_date:response.data.due_date,
                         status:response.data.status});
                 }
-                
-                //alert("Added Successfully");
                 console.log(JSON.stringify(pendingBill));
             }, (error) => {
                 console.log(error);
@@ -228,7 +216,6 @@ function SubAdminGenerateBills() {
                                 due_date:'',
                                 status:''
                             });
-                            //alert("Added Successfully");
                             
                         }, (error) => {
                             console.log(error);
@@ -259,7 +246,6 @@ function SubAdminGenerateBills() {
                                 due_date:'',
                                 status:''
                             });
-                            //alert("Added Successfully");
                             
                         }, (error) => {
                             console.log(error);
@@ -296,16 +282,16 @@ function SubAdminGenerateBills() {
         setTimeout(()=>{ x.className = x.className.replace("show", ""); }, 3000);
     }
     const getAvailableZones = () => {
-        axios.get("http://localhost:8080/getAvailableZones/").then(
+        let user=JSON.parse(localStorage.getItem("loggedinuser"));
+        axios.get(`http://localhost:8080/getSubAdmin/${user?.user_id}`).then(
             (response) => {
                 console.log(response);
-                setZones( response.data);
-                //consumers = JSON.parse(response);
-                //alert("Added Successfully");
+                setZones(response.data.zone);
+                
                 
             }, (error) => {
                 console.log(error);
-                alert("Something went wrong while fetching zones. Please try again after sometime.");
+                alert("Something went wrong while fetching available zones.");
             }
         );
     }
@@ -334,18 +320,6 @@ function SubAdminGenerateBills() {
                     <i className="fa fa-eye w3-xlarge"></i>
                     <p>View Consumer</p>
                 </a>
-                {/* <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/ViewSubAdmin");}}>
-                    <i className="fa fa-eye w3-xlarge"></i>
-                    <p>View Sub Admins</p>
-                </a> */}
-                {/* <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/AddZone");}}>
-                    <i className="fas fa-clipboard w3-xlarge"></i>
-                    <p>Add Zone</p>
-                </a> */}
-                <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/SubAdminAddUser");}}>
-                    <i className="fas fa-id-badge w3-xlarge"></i>
-                    <p>Add User</p>
-                </a>
                 <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/SubAdminGenerateBills");}}>
                     <i className="fas fa-cart-plus w3-xlarge"></i>
                     <p>Generate Bills</p>
@@ -359,7 +333,7 @@ function SubAdminGenerateBills() {
                 <div className="w3-panel w3-black">
                     <p><span className="h3 mb-0 text-gray-800">Sub Admin Panel</span><span  className="support"> For Support:  <i
                             className="fas fa-phone-square ml-4 fa-sm fa-fw mr-2 "></i>+91 9011100528 <i className="fa fa-envelope mr-2 ml-4" aria-hidden="true"></i>
-                             onlinebilelectricity@gmail.com <button  type="button" className="btn btn-primary" onClick={(e) =>handleLogOut(e)}>Log Out</button></span> 
+                             onlineelectricitybill@gmail.com <button  type="button" className="btn btn-primary" onClick={(e) =>handleLogOut(e)}>Log Out</button></span> 
                     </p>
                     
                 </div> 
@@ -372,22 +346,15 @@ function SubAdminGenerateBills() {
                         
                         <div className="container PageContainer">
                             <div className="row">
-                                <label className="display-4 text-center">Generate Bills</label>
+                                <label className="display-4 text-center center">Generate Bills</label>
                             </div>
                             <form onSubmit={e => FormHandle(e)} id="contact-form">
                                 <div className="row">
                                     <div className="col-75">
                                         <select  className="display-6" aria-label=".form-select-lg example" name="zone_id" value={zone_id} onChange={(e) => onInputChange(e)} onBlur={validateInput} >
                                             <option value="0">Open this select menu</option>
-                                            {zones.map((val,key) => {
-                                                    return (
-                                                        <option value={val.zone_id}>{val.zone_name}</option>
-                                                    )
-                                            })}
-                                            {/* <option value="1">Katraj</option>
-                                            <option value="2">Kothrud</option>
-                                            <option value="3">Hadapsar</option>
-                                            <option value="4">Nigdi</option> */}
+                                            <option value={zones.zone_id}>{zones.zone_name}</option>
+                                                    
                                         </select>
                                         {error.zone_id && <span className='err'>{error.zone_id}</span>}
                                     </div>
@@ -405,11 +372,6 @@ function SubAdminGenerateBills() {
                                                 <th>Consumer ID</th>
                                                 <th>Name</th>
                                                 <th>Select</th>
-                                                {/* <th>Email ID</th>
-                                                <th>Mobile No.</th>
-                                                <th>Address</th>
-                                                <th>City</th>
-                                                <th>State</th> */}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -418,11 +380,6 @@ function SubAdminGenerateBills() {
                                                 <tr key={key}>
                                                     <td>{val.consumer_id}</td>
                                                     <td>{val.name}</td>
-                                                    {/* <td>{val.email}</td>
-                                                    <td>{val.mobile_no}</td>
-                                                    <td>{val.address}</td>
-                                                    <td>{val.city}</td>
-                                                    <td>{val.state}</td> */}
                                                     <td><button  id={key} className="tablebutton" onClick={generatebillform}>Select</button></td>
                                                 </tr>
                                             )
@@ -510,7 +467,7 @@ function SubAdminGenerateBills() {
                                                     <label className="display-6 text-center">Due date : </label>
                                                 </div>
                                                 <div className="col-75">
-                                                    <input className="display-6 text-center" type="date" id="due_date" name="due_date" placeholder="select date" value={due_date} onChange={(e) =>onDateChange(e)} />
+                                                    <input className="display-6 text-center" type="date" id="due_date" name="due_date" placeholder="select date" value={due_date} disabled />
                                                 </div>
                                             </div>
                                             <div className="row">

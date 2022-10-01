@@ -1,4 +1,3 @@
-import { render } from "@testing-library/react";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
@@ -6,7 +5,6 @@ import image from '../images/logo.gif';
 
 
 function AdminProfile() {
-    let firstentry=true;
     let navigate=useNavigate();
     const [hide, toggleHide]=useState(true);
     const [admin, setAdmin] = useState({  
@@ -154,7 +152,7 @@ function AdminProfile() {
             }
         );
     }
-    // api call to fetch admin profile derails.
+    // api call to fetch admin profile details.
     const getDataFromServer = ( ) => {
         let user=JSON.parse(localStorage.getItem("loggedinuser"));
         axios.get(`http://localhost:8080/getAdmin/${user?.user_id}`).then(
@@ -211,7 +209,7 @@ function AdminProfile() {
                     </a>
                     <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/AddUser");}}>
                         <i className="fas fa-id-badge w3-xlarge"></i>
-                        <p>Add User</p>
+                        <p>Add Sub Admin</p>
                     </a>
                     <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/GenerateBills");}}>
                         <i className="fas fa-cart-plus w3-xlarge"></i>
@@ -226,7 +224,7 @@ function AdminProfile() {
                     <div className="w3-panel w3-black">
                         <p><span className="h3 mb-0 text-gray-800">Admin Panel</span><span  className="support"> For Support:  <i
 								className="fas fa-phone-square ml-4 fa-sm fa-fw mr-2 "></i>+91 9011100528 <i className="fa fa-envelope mr-2 ml-4" aria-hidden="true"></i>
-								 onlinebilelectricity@gmail.com <button  type="button" className="btn btn-primary" onClick={(e) =>handleLogOut(e)}>Log Out</button></span> 
+								 onlineelectricitybill@gmail.com <button  type="button" className="btn btn-primary" onClick={(e) =>handleLogOut(e)}>Log Out</button></span> 
                         </p>
                         
                     </div> 
@@ -238,7 +236,7 @@ function AdminProfile() {
                         <div className="col-12 col-lg-10 col-xl-10 offset-xl-1 top-padding">
                             <div className="container PageContainer" id="ReadOnly">
                                 <div className="row">
-                                    <label className="display-4 text-center">Admin Profile</label>
+                                    <label className="display-4 text-center center">Admin Profile</label>
                                 </div>
                                 
                                     <div className="row">

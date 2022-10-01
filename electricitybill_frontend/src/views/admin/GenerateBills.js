@@ -1,4 +1,3 @@
-import { render } from "@testing-library/react";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
@@ -6,9 +5,6 @@ import image from '../images/logo.gif';
 
 
 function GenerateBills() {
-    let w=200;
-    let h=200;
-    //let consumersList =[];
     const [hide, toggleHide]=useState(true);
     const [zones, setZones]=useState([]);
     const [consumers,setConsumers] =useState([]);
@@ -63,15 +59,13 @@ function GenerateBills() {
 
     }
     const onDateChange = e =>{
-        setBillForm({...billform,[e.target.name]: e.target.value});
+        var date = new Date(e.target.value);
+        var dueDate= new Date(date.setMonth(date.getMonth()+1)).toISOString().split("T")[0];
+        setBillForm({...billform,[e.target.name]: e.target.value,
+        due_date:dueDate});
     }
     const {consumer_id,name,units,current_billAmt,dues,fine,total_billAmt,tax,bill_date,due_date,status}=billform;
     const {zone_id} = zone;
-    // const reloadPage = () => {
-    //     setZone({
-    //         zone_id:''
-    //     });
-    // }
     const handleLogOut = e => {
         e.preventDefault();
         localStorage.clear();
@@ -89,8 +83,6 @@ function GenerateBills() {
             (response) => {
                 console.log(response);
                 setConsumers( response.data);
-               // consumersList = JSON.parse(response);
-                //alert("Added Successfully");
                 
             }, (error) => {
                 console.log(error);
@@ -104,8 +96,6 @@ function GenerateBills() {
             (response) => {
                 console.log(response);
                 setZones( response.data);
-                //consumers = JSON.parse(response);
-                //alert("Added Successfully");
                 
             }, (error) => {
                 console.log(error);
@@ -118,7 +108,7 @@ function GenerateBills() {
         console.log(e.target.id);
         let id = e.target.id;
         let consumerID=parseInt(consumers[id].consumer_id);
-        fetchPendingBill(consumerID);
+        fetchPendingBill(consumerID); //first fetch the pending bill if any.
         setBillForm({
             consumer_id: consumers[id].consumer_id,
             name: consumers[id].name,
@@ -137,7 +127,6 @@ function GenerateBills() {
     const calculateBill = e=>{
         console.log(billform);
         let units = parseInt(billform.units);
-        //fetchPendingBill(); //first fetch the pending bill if any.
         let bill,tax,dues,fine,totalBill;
         //if there is no pending bill calculate the bill based on current months units consumptions.
         if(pendingBill.bill_id ==='' && units > 0){
@@ -194,11 +183,9 @@ function GenerateBills() {
     }
     //fetch the pending bill of consumer if any.
     const fetchPendingBill = (consumerid) =>{
-        //let id = parseInt(billform.consumer_id);
         axios.get(`http://localhost:8080/fetchPendingBill/${consumerid}`).then(
             (response) => {
                 console.log(response);
-                //let fetchedPendingBill = JSON.parse(response);
                 if(response.data!=""){
                     setPendingBill({ ...pendingBill,
                         bill_id:response.data.bill_id,
@@ -214,7 +201,6 @@ function GenerateBills() {
                         due_date:response.data.due_date,
                         status:response.data.status});
                 }
-                //alert("Added Successfully");
                 
             }, (error) => {
                 console.log(error);
@@ -253,7 +239,6 @@ function GenerateBills() {
                                 due_date:'',
                                 status:''
                             });
-                            //alert("Added Successfully");
                             
                         }, (error) => {
                             console.log(error);
@@ -284,7 +269,6 @@ function GenerateBills() {
                                 due_date:'',
                                 status:''
                             });
-                            //alert("Added Successfully");
                             
                         }, (error) => {
                             console.log(error);
@@ -352,7 +336,7 @@ function GenerateBills() {
                 </a>
                 <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/AddUser");}}>
                     <i className="fas fa-id-badge w3-xlarge"></i>
-                    <p>Add User</p>
+                    <p>Add Sub Admin</p>
                 </a>
                 <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/GenerateBills");}}>
                     <i className="fas fa-cart-plus w3-xlarge"></i>
@@ -367,7 +351,7 @@ function GenerateBills() {
                 <div className="w3-panel w3-black">
                     <p><span className="h3 mb-0 text-gray-800">Admin Panel</span><span  className="support"> For Support:  <i
                             className="fas fa-phone-square ml-4 fa-sm fa-fw mr-2 "></i>+91 9011100528 <i className="fa fa-envelope mr-2 ml-4" aria-hidden="true"></i>
-                             onlinebilelectricity@gmail.com <button  type="button" className="btn btn-primary" onClick={(e) =>handleLogOut(e)}>Log Out</button></span> 
+                             onlineelectricitybill@gmail.com <button  type="button" className="btn btn-primary" onClick={(e) =>handleLogOut(e)}>Log Out</button></span> 
                     </p>
                     
                 </div> 
@@ -380,7 +364,7 @@ function GenerateBills() {
                         
                         <div className="container PageContainer">
                             <div className="row">
-                                <label className="display-4 text-center">Generate Bills</label>
+                                <label className="display-4 text-center center">Generate Bills</label>
                             </div>
                             <form onSubmit={e => FormHandle(e)} id="contact-form">
                                 <div className="row">
@@ -392,10 +376,6 @@ function GenerateBills() {
                                                         <option value={val.zone_id}>{val.zone_name}</option>
                                                     )
                                             })}
-                                            {/* <option value="1">Katraj</option>
-                                            <option value="2">Kothrud</option>
-                                            <option value="3">Hadapsar</option>
-                                            <option value="4">Nigdi</option> */}
                                         </select>
                                         {error.zone_id && <span className='err'>{error.zone_id}</span>}
                                     </div>
@@ -413,11 +393,6 @@ function GenerateBills() {
                                                 <th>Consumer ID</th>
                                                 <th>Name</th>
                                                 <th>Select</th>
-                                                {/* <th>Email ID</th>
-                                                <th>Mobile No.</th>
-                                                <th>Address</th>
-                                                <th>City</th>
-                                                <th>State</th> */}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -426,11 +401,6 @@ function GenerateBills() {
                                                 <tr key={key}>
                                                     <td>{val.consumer_id}</td>
                                                     <td>{val.name}</td>
-                                                    {/* <td>{val.email}</td>
-                                                    <td>{val.mobile_no}</td>
-                                                    <td>{val.address}</td>
-                                                    <td>{val.city}</td>
-                                                    <td>{val.state}</td> */}
                                                     <td><button  id={key} className="tablebutton" onClick={generatebillform}>Select</button></td>
                                                 </tr>
                                             )
@@ -518,7 +488,7 @@ function GenerateBills() {
                                                     <label className="display-6 text-center">Due date : </label>
                                                 </div>
                                                 <div className="col-75">
-                                                    <input className="display-6 text-center" type="date" id="due_date" name="due_date" placeholder="select date" value={due_date} onChange={(e) =>onDateChange(e)} />
+                                                    <input className="display-6 text-center" type="date" id="due_date" name="due_date" placeholder="select date" value={due_date} disabled />
                                                 </div>
                                             </div>
                                             <div className="row">

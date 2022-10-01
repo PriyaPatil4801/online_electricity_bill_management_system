@@ -1,4 +1,3 @@
-import { render } from "@testing-library/react";
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
@@ -7,12 +6,9 @@ import image from '../images/logo.gif';
 
 function AddUser() {
     let navigate=useNavigate();
-    let w=200;
-    let h=200;
     const [hide, toggleHide]=useState(true); //prop to decide whether to show content or not
     const [zones, setZones] = useState([]);  //list  of zones
     const [user, setUser] = useState({
-        role: '',  
         name: '',
         mobile_no:'',
         address: '',
@@ -24,7 +20,6 @@ function AddUser() {
         confirmPassword:''
     });
     const [error, setError] = useState({
-        role: '',
         name: '',
         mobile_no:'',
         address: '',
@@ -49,7 +44,6 @@ function AddUser() {
     
     const reloadPage = () => {
         setUser({
-            role: '',
             name: '',
             mobile_no:'',
             address: '',
@@ -61,7 +55,6 @@ function AddUser() {
             confirmPassword:''
         });
         setError({
-            role: '',
             name: '',
             mobile_no:'',
             address: '',
@@ -76,96 +69,69 @@ function AddUser() {
     //form validation
     const validateInput = e => {
         let { name, value } = e.target;
-        let isValid = true;
         setError(prev => {
           const stateObj = { ...prev, [name]: "" };
      
           switch (name) {
-            case "role":
-              if (!value || value === "0") {
-                stateObj[name] = "Please select role.";
-                isValid = false;
-              }
-              break;case "name":
-              if (!value) {
-                stateObj[name] = "Please enter name.";
-                isValid = false;
-              }
-              break;
             case "name":
               if (!value) {
                 stateObj[name] = "Please enter name.";
-                isValid = false;
               }
               break;
             
             case "mobile_no":
             if (!value) {
                 stateObj[name] = "Please enter mobile no.";
-                isValid = false;
             }else if(value.length!= 10){
                 stateObj[name] = "Please enter valid mobile no.";
-                isValid = false;
             }
             break;
 
             case "address":
                 if (!value) {
                 stateObj[name] = "Please enter address.";
-                isValid = false;
                 }
                 break;
 
             case "city":
                 if (!value) {
                 stateObj[name] = "Please enter city.";
-                isValid = false;
                 }
                 break;
 
             case "email":
                 if (!value) {
                 stateObj[name] = "Please enter email.";
-                isValid = false;
                 }
                 break;
 
             case "state":
                 if (!value) {
                 stateObj[name] = "Please enter state.";
-                isValid = false;
                 }
                 break;
 
             case "zone_id":
                 if (!value || value == "0") {
                 stateObj[name] = "Please select zone.";
-                isValid = false;
                 }
                 break;
      
             case "password":
               if (!value) {
                 stateObj[name] = "Please enter Password.";
-                isValid = false;
               } else if (user.confirmPassword && value !== user.confirmPassword) {
                 stateObj["confirmPassword"] = "Password and Confirm Password does not match.";
-                isValid = false;
               } else {
                 stateObj["confirmPassword"] = user.confirmPassword ? "" : error.confirmPassword;
-                if(error.confirmPassword!=""){
-                    isValid = false;
-                }
               }
               break;
      
             case "confirmPassword":
               if (!value) {
                 stateObj[name] = "Please enter Confirm Password.";
-                isValid = false;
               } else if (user.password && value !== user.password) {
                 stateObj[name] = "Password and Confirm Password does not match.";
-                isValid = false;
               }
               break;
      
@@ -181,37 +147,25 @@ function AddUser() {
     //this method will trigger on form submit
     const FormHandle = e => {
         e.preventDefault();
-        console.log(JSON.stringify(user))
-        
+        console.log(JSON.stringify(user));
         addDataToServer(user);
         
         
     }
     //calling register apis w.r.t. selected role
     const addDataToServer = (data) => {
-        if(data.role === "1"){
-            axios.post("http://localhost:8080/regSubadmin", data).then(
-                (response) => {
-                    console.log(response);
-                    alert("User registered successfully!");
-                    
-                }, (error) => {
-                    console.log(error);
-                    alert("error while registering User. Please check entered information is correct and try again.");
-                }
-            );
-        }else if(data.role === "2"){
-            axios.post("http://localhost:8080/regConsumer", data).then(
-                (response) => {
-                    console.log(response);
-                    alert("User registered successfully!");
-                    
-                }, (error) => {
-                    console.log(error);
-                    alert("error while registering User. Please check entered information is correct and try again.");
-                }
-            );
-        }
+       
+        axios.post("http://localhost:8080/regSubadmin", data).then(
+            (response) => {
+                console.log(response);
+                alert("User registered successfully!");
+                
+            }, (error) => {
+                console.log(error);
+                alert("error while registering User. Please check entered information is correct and try again.");
+            }
+        );
+        
         
     }
     //fetching avaliable zones
@@ -220,8 +174,6 @@ function AddUser() {
             (response) => {
                 console.log(response);
                 setZones( response.data);
-                //consumers = JSON.parse(response);
-                //alert("Added Successfully");
                 
             }, (error) => {
                 console.log(error);
@@ -270,7 +222,7 @@ function AddUser() {
                     </a>
                     <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/AddUser");}}>
                         <i className="fas fa-id-badge w3-xlarge"></i>
-                        <p>Add User</p>
+                        <p>Add Sub Admin</p>
                     </a>
                     <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/GenerateBills");}}>
                         <i className="fas fa-cart-plus w3-xlarge"></i>
@@ -285,7 +237,7 @@ function AddUser() {
                     <div className="w3-panel w3-black">
                         <p><span className="h3 mb-0 text-gray-800">Admin Panel</span><span  className="support"> For Support:  <i
 								className="fas fa-phone-square ml-4 fa-sm fa-fw mr-2 "></i>+91 9011100528 <i className="fa fa-envelope mr-2 ml-4" aria-hidden="true"></i>
-								 onlinebilelectricity@gmail.com <button  type="button" className="btn btn-primary" onClick={(e) =>handleLogOut(e)}>Log Out</button></span> 
+								 onlineelectricitybill@gmail.com <button  type="button" className="btn btn-primary" onClick={(e) =>handleLogOut(e)}>Log Out</button></span> 
                         </p>
                         
                     </div> 
@@ -297,22 +249,10 @@ function AddUser() {
                         <div className="col-12 col-lg-10 col-xl-10 offset-xl-1 top-padding">
                             <div className="container PageContainer">
                                 <div className="row">
-                                    <label className="display-4 text-center">Add New User</label>
+                                    <label className="display-4 text-center center">Add New Sub Admin</label>
                                 </div>
                                 <form onSubmit={e => FormHandle(e)} id="contact-form">
-                                    <div className="row">
-                                        <div className="col-25">
-                                            <label className="display-6 text-center">Select Role : </label>
-                                        </div>
-                                        <div className="col-75">
-                                            <select className="display-6" aria-label=".form-select-lg example" name="role" value={role} onChange={(e) => onInputChange(e)} onBlur={validateInput} >
-                                                <option value="0">Open this select menu</option>
-                                                <option value="1">Sub Admin</option>
-                                                <option value="2">Consumer</option>
-                                            </select>
-                                            {error.zone_id && <span className='err'>{error.zone_id}</span>}
-                                        </div>
-                                    </div>
+                                    
                                     <div className="row">
                                         <div className="col-25">
                                             <label className="display-6 text-center" for="name">Name : </label>
@@ -379,10 +319,6 @@ function AddUser() {
                                                         <option value={val.zone_id}>{val.zone_name}</option>
                                                     )
                                                 })}
-                                                {/* <option value="1">Katraj</option>
-                                                <option value="2">Kothrud</option>
-                                                <option value="3">Hadapsar</option>
-                                                <option value="4">Nigdi</option> */}
                                             </select>
                                             {error.zone_id && <span className='err'>{error.zone_id}</span>}
                                         </div>

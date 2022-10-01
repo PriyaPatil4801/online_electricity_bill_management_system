@@ -1,4 +1,3 @@
-import { render } from "@testing-library/react";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
@@ -6,8 +5,6 @@ import image from '../images/logo.gif';
 
 
 function SubAdminViewConsumer() {
-    // let w=200;
-    // let h=200;
     const [hide, toggleHide] = useState(true);
     const [zones, setZones] = useState([]);
     const [consumers,setConsumers] =useState([]);
@@ -24,11 +21,6 @@ function SubAdminViewConsumer() {
         setZone({ ...zone, [e.target.name]: e.target.value })
     }
     const {zone_id} = zone;
-    // const reloadPage = () => {
-    //     setZone({
-    //         zone_id:''
-    //     });
-    // }
     const handleLogOut = e => {
         e.preventDefault();
         localStorage.clear();
@@ -45,9 +37,6 @@ function SubAdminViewConsumer() {
             (response) => {
                 console.log(response);
                 setConsumers( response.data);
-                //consumers = JSON.parse(response);
-                //alert("Added Successfully");
-                
             }, (error) => {
                 console.log(error);
                 alert("Something went wrong while fetching consumers. Please try again after sometime.");
@@ -81,19 +70,36 @@ function SubAdminViewConsumer() {
         setTimeout(()=>{ x.className = x.className.replace("show", ""); }, 3000);
     }
     const getAvailableZones = () => {
-        axios.get("http://localhost:8080/getAvailableZones/").then(
+        let user=JSON.parse(localStorage.getItem("loggedinuser"));
+        axios.get(`http://localhost:8080/getSubAdmin/${user?.user_id}`).then(
             (response) => {
                 console.log(response);
-                setZones( response.data);
-                //consumers = JSON.parse(response);
-                //alert("Added Successfully");
+                setZones(response.data.zone);
+                
                 
             }, (error) => {
                 console.log(error);
-                alert("Something went wrong while fetching zones. Please try again after sometime.");
+                alert("Something went wrong while fetching available zones.");
             }
         );
     }
+
+    const deleteSelectedConsumer = (e)=>{
+        let key= e.target.id;
+        let consumerID = parseInt(consumers[key].consumer_id);
+        axios.post(`http://localhost:8080/deleteConsumerByID/${consumerID}`).then(
+                        (response) => {
+                            console.log(response);
+                            getDataFromServer(zone);
+                            alert("Consumer has been deleted successfully!!");
+                            
+                        }, (error) => {
+                            console.log(error);
+                            alert("Something went wrong while deleting Consumer. Please try again after sometime.");
+                        }
+                    );
+    }
+
     //react hook to handle component side effect. checking the user authorization before component load and only then showing content.
     useEffect(()=>{
         let user=JSON.parse(localStorage.getItem("loggedinuser"));
@@ -119,18 +125,6 @@ function SubAdminViewConsumer() {
                     <i className="fa fa-eye w3-xlarge"></i>
                     <p>View Consumer</p>
                 </a>
-                {/* <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/ViewSubAdmin");}}>
-                    <i className="fa fa-eye w3-xlarge"></i>
-                    <p>View Sub Admins</p>
-                </a> */}
-                {/* <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/AddZone");}}>
-                    <i className="fas fa-clipboard w3-xlarge"></i>
-                    <p>Add Zone</p>
-                </a> */}
-                <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/SubAdminAddUser");}}>
-                    <i className="fas fa-id-badge w3-xlarge"></i>
-                    <p>Add User</p>
-                </a>
                 <a href="" className="w3-bar-item w3-button w3-padding-large w3-hover-black" onClick={() => {navigate("/SubAdminGenerateBills");}}>
                     <i className="fas fa-cart-plus w3-xlarge"></i>
                     <p>Generate Bills</p>
@@ -144,7 +138,7 @@ function SubAdminViewConsumer() {
                 <div className="w3-panel w3-black">
                     <p><span className="h3 mb-0 text-gray-800">Sub Admin Panel</span><span  className="support"> For Support:  <i
                             className="fas fa-phone-square ml-4 fa-sm fa-fw mr-2 "></i>+91 9011100528 <i className="fa fa-envelope mr-2 ml-4" aria-hidden="true"></i>
-                             onlinebilelectricity@gmail.com <button  type="button" className="btn btn-primary" onClick={(e) =>handleLogOut(e)}>Log Out</button></span> 
+                             onlineelectricitybill@gmail.com <button  type="button" className="btn btn-primary" onClick={(e) =>handleLogOut(e)}>Log Out</button></span> 
                     </p>
                     
                 </div> 
@@ -157,22 +151,15 @@ function SubAdminViewConsumer() {
                         
                         <div className="container PageContainer">
                             <div className="row">
-                                <label className="display-4 text-center">View Consumers</label>
+                                <label className="display-4 text-center center">View Consumers</label>
                             </div>
                             <form onSubmit={e => FormHandle(e)} id="contact-form">
                                 <div className="row">
                                     <div className="col-75">
                                         <select  className="display-6" aria-label=".form-select-lg example" name="zone_id" value={zone_id} onChange={(e) => onInputChange(e)} onBlur={validateInput} >
                                             <option value="0">Open this select menu</option>
-                                            {zones.map((val,key) => {
-                                                    return (
-                                                        <option value={val.zone_id}>{val.zone_name}</option>
-                                                    )
-                                            })}
-                                            {/* <option value="1">Katraj</option>
-                                            <option value="2">Kothrud</option>
-                                            <option value="3">Hadapsar</option>
-                                            <option value="4">Nigdi</option> */}
+                                            <option value={zones.zone_id}>{zones.zone_name}</option>
+                                            
                                         </select>
                                         {error.zone_id && <span className='err'>{error.zone_id}</span>}
                                     </div>
@@ -194,6 +181,7 @@ function SubAdminViewConsumer() {
                                                 <th>Address</th>
                                                 <th>City</th>
                                                 <th>State</th>
+                                                <th>Delete</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -207,6 +195,7 @@ function SubAdminViewConsumer() {
                                                     <td>{val.address}</td>
                                                     <td>{val.city}</td>
                                                     <td>{val.state}</td>
+                                                    <td><button  id={key} className="tablebutton" onClick={deleteSelectedConsumer}>Delete</button></td>
                                                 </tr>
                                             )
                                             })}
